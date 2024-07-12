@@ -1,11 +1,11 @@
 #include "utils.hpp"
 
 Render::Render(int verticalResolution, int horizontalResolution) :
-    render(MatrixXchar(verticalResolution, horizontalResolution)) {
+    render(MatrixXchar::Zero(verticalResolution, horizontalResolution)) {
 }
 
 Render::Render(std::tuple<int, int> resolution) :
-    render(MatrixXchar(std::get<0>(resolution), std::get<1>(resolution))) {
+    render(MatrixXchar::Zero(std::get<0>(resolution), std::get<1>(resolution))) {
 }
 
 bool intersect_triangle(Ray R, Triangle triangle, float& t) {
