@@ -20,6 +20,9 @@ class Triangle {
         /// @param invert Wether the normal vector should be built in the direct cross-product direction
         Triangle(Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector3d point2, bool invert = false);
 
+        /// @brief A method to get the vertex n° i of the triangle
+        /// @param i The index of the vertex to get (must be within (0, 1, 2))
+        /// @return The position vector of the vertex of the triangle
         Eigen::Vector3d getPoint(int i) const;
 
 };

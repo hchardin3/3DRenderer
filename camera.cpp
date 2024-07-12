@@ -27,10 +27,10 @@ std::tuple<int, int> Camera::getDimensions() const {
 }
 
 Eigen::Vector3d Camera::getPositionPixel(const int i, const int j) const {
-    Eigen::Vector3d pixelPosition = m_position + m_forward;
+    Eigen::Vector3d pixelPosition = m_position + m_forward * m_distance;
 
-    pixelPosition += std::tan((i - m_horizontalResolution/2) * m_horizontalRadPerPixel) * m_distance * m_right;
-    pixelPosition += std::tan(-(j - m_verticalResolution/2) * m_verticalRadPerPixel) * m_distance * m_up;
+    pixelPosition += std::tan(-(i - m_horizontalResolution/2) * m_horizontalRadPerPixel) * m_distance * m_up;
+    pixelPosition += std::tan(-(j - m_verticalResolution/2) * m_verticalRadPerPixel) * m_distance * m_right;
 
     return pixelPosition;
 }
@@ -39,6 +39,6 @@ Ray Camera::getRay(const int i, const int j) const {
     Ray ray;
     ray.origin = m_position;
     Eigen::Vector3d pixel_pos = getPositionPixel(i, j);
-    ray.direction = pixel_pos - m_position;
+    ray.direction = (pixel_pos - m_position).normalized();
     return ray;
 }

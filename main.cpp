@@ -13,7 +13,7 @@ int main() {
     Eigen::Vector3d A, B, C;
     A << -1., 3., 1.;
     B << 1., 3., 1.;
-    C << 0., 3., -1.;
+    C << 0.5, 3., -1.;
 
     Triangle triangle(A, B, C);
 

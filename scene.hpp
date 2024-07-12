@@ -17,8 +17,12 @@ class Scene {
         /// @param camera The camera to be used for rendering
         Scene(Camera* camera);
 
+        /// @brief This method analyses what the camera sees on each of its pixels
+        /// @return The image frame of the scene through the camera's eye
         Render getRender();
 
+        /// @brief A function to add an object to the scene
+        /// @param triangle The object to be added (now only Triangle)
         void addTriangle(Triangle* triangle);
 
 

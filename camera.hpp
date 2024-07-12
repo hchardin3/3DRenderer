@@ -31,10 +31,20 @@ class Camera {
         /// @param distance The distance between the eye and the projection plane (in meters)
         Camera(double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance);
 
+        /// @brief Return the number of pixels per lines and columns
+        /// @return A tuple of two integers: the number of vertical and horizontal pixels
         std::tuple<int, int> getDimensions() const;
 
+        /// @brief A method to get the vector from the origin of the scene to the pixel (i, j)
+        /// @param i The vertical index of the pixel in the frame
+        /// @param j The horizontal index of the pixel in the frame
+        /// @return The 3D position vector of the pixel in global frame
         Eigen::Vector3d getPositionPixel(const int i, const int j) const;
 
+        /// @brief A method to get the light ray that leaves the origin of the camera and goes through the pixel (i, j)
+        /// @param i The vertical index of the pixel in the frame
+        /// @param j The horizontal index of the pixel in the frame
+        /// @return The corresponding Ray (custom object)
         Ray getRay(const int i, const int j) const;
 
 };
