@@ -15,6 +15,8 @@ Camera::Camera(double horizontalFOV, double verticalFOV,  int horizontalResoluti
         m_forward.y() = 1.0;
 
         m_renderer = Eigen::MatrixXd::Zero(horizontalResolution, verticalResolution);
-
-        std::cout << "Camera Created! Are you happy now?\n";
     }
+
+std::tuple<int, int> Camera::getDimensions() const {
+    return std::tuple<int, int>(m_verticalResolution, m_horizontalResolution);
+}

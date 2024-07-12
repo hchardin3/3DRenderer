@@ -1,7 +1,7 @@
 #pragma once
 
 #include <eigen3/Eigen/Dense>
-#include <iostream>
+#include <tuple>
 
 class Camera {
     private:
@@ -26,5 +26,7 @@ class Camera {
         /// @param verticalResolution The vertical field of vue (in number of pixels)
         /// @param distance The distance between the eye and the projection plane (in meters)
         Camera(double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance);
+
+        std::tuple<int, int> getDimensions() const;
 
 };
