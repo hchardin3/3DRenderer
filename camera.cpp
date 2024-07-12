@@ -14,7 +14,7 @@ Camera::Camera(double horizontalFOV, double verticalFOV,  int horizontalResoluti
 
         m_up.z() = 1.0;
         m_forward.y() = 1.0;
-        m_right = m_up.cross(m_forward);
+        m_right = m_forward.cross(m_up);
 
         m_renderer = Eigen::MatrixXd::Zero(horizontalResolution, verticalResolution);
 
@@ -30,7 +30,7 @@ Eigen::Vector3d Camera::getPositionPixel(const int i, const int j) const {
     Eigen::Vector3d pixelPosition = m_position + m_forward * m_distance;
 
     pixelPosition += std::tan(-(i - m_horizontalResolution/2) * m_horizontalRadPerPixel) * m_distance * m_up;
-    pixelPosition += std::tan(-(j - m_verticalResolution/2) * m_verticalRadPerPixel) * m_distance * m_right;
+    pixelPosition += std::tan((j - m_verticalResolution/2) * m_verticalRadPerPixel) * m_distance * m_right;
 
     return pixelPosition;
 }
