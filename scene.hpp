@@ -10,7 +10,7 @@
 class Scene {
     private:
         Camera* m_camera;
-        std::list<Triangle> m_listOfObjects;
+        std::list<Triangle*> m_listOfObjects;
     
     public:
         /// @brief Create the whole scene that contains one camera and a few objects
@@ -18,6 +18,8 @@ class Scene {
         Scene(Camera* camera);
 
         Render getRender();
+
+        void addTriangle(Triangle* triangle);
 
 
 };

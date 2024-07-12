@@ -23,6 +23,7 @@ bool intersect_triangle(Ray R, Triangle triangle, float& t) {
     float u =  E2.dot(DAO) * invdet;
     float v = -E1.dot(DAO) * invdet;
     t =  AO.dot(N)  * invdet; 
-    return (det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u+v) <= 1.0);
+
+    return (std::fabs(det) >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u+v) <= 1.0);
 
 }
