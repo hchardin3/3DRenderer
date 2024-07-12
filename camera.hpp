@@ -1,4 +1,7 @@
+#pragma once
+
 #include <eigen3/Eigen/Dense>
+#include <iostream>
 
 class Camera {
     private:
@@ -8,14 +11,20 @@ class Camera {
 
         double m_horizontalFOV;
         double m_verticalFOV;
-        double m_horizontalResolution;
-        double m_verticalResolution;
+        int m_horizontalResolution;
+        int m_verticalResolution;
         double m_distance;
 
         Eigen::MatrixXd m_renderer;
 
 
     public:
-        Camera(double horizontalFOV, double verticalFOV,  double horizontalResolution,  double verticalResolution,  double distance);
+        /// @brief The camera is assumed to be initialized at the origin, facing the y-axis. 
+        /// @param horizontalFOV The horizontal field of vue (in degree)
+        /// @param verticalFOV The vertical field of vue (in degree)
+        /// @param horizontalResolution The horizontal resolution (in number of pixels)
+        /// @param verticalResolution The vertical field of vue (in number of pixels)
+        /// @param distance The distance between the eye and the projection plane (in meters)
+        Camera(double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance);
 
 };

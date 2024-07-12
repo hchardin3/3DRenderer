@@ -1,6 +1,6 @@
 #include "camera.hpp"
 
-Camera::Camera(double horizontalFOV, double verticalFOV,  double horizontalResolution,  double verticalResolution,  double distance) :
+Camera::Camera(double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance) :
     m_horizontalFOV(horizontalFOV), 
     m_verticalFOV(verticalFOV),
     m_horizontalResolution(horizontalResolution),
@@ -15,4 +15,6 @@ Camera::Camera(double horizontalFOV, double verticalFOV,  double horizontalResol
         m_forward.y() = 1.0;
 
         m_renderer = Eigen::MatrixXd::Zero(horizontalResolution, verticalResolution);
+
+        std::cout << "Camera Created! Are you happy now?\n";
     }
