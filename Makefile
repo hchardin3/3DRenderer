@@ -1,7 +1,11 @@
 # Compiler
 CXX = g++
+
+# Environment variable for Eigen include path
+EIGEN_PATH = C:\\msys64\\mingw64\\include
+
 # Compiler flags
-CXXFLAGS = -g -I/usr/include/eigen3 -I.
+CXXFLAGS = -g -I$(EIGEN_PATH) -I.
 
 # Source files
 SRC = $(wildcard *.cpp)
