@@ -10,7 +10,7 @@
 class Scene {
     private:
         Camera* m_camera;
-        std::list<BasicMesh> m_listOfObjects;
+        std::list<Triangle> m_listOfObjects;
     
     public:
         /// @brief Create the whole scene that contains one camera and a few objects

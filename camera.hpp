@@ -2,17 +2,21 @@
 
 #include <eigen3/Eigen/Dense>
 #include <tuple>
+#include "utils.hpp"
 
 class Camera {
     private:
         Eigen::Vector3d m_position;
         Eigen::Vector3d m_up;
         Eigen::Vector3d m_forward;
+        Eigen::Vector3d m_right;
 
         double m_horizontalFOV;
         double m_verticalFOV;
         int m_horizontalResolution;
         int m_verticalResolution;
+        double m_horizontalRadPerPixel;
+        double m_verticalRadPerPixel;
         double m_distance;
 
         Eigen::MatrixXd m_renderer;
@@ -28,5 +32,9 @@ class Camera {
         Camera(double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance);
 
         std::tuple<int, int> getDimensions() const;
+
+        Eigen::Vector3d getPositionPixel(const int i, const int j) const;
+
+        Ray getRay(const int i, const int j) const;
 
 };
