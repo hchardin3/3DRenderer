@@ -19,5 +19,6 @@ This is the whole scene, that contains one camera and several meshes.
 
 ## Custom commands
 
-These are the custom commands to use our renderer.
+These are the custom commands to use our renderer:
+
     make && ./main
