@@ -42,3 +42,33 @@ Ray Camera::getRay(const int i, const int j) const {
     ray.direction = (pixel_pos - m_position).normalized();
     return ray;
 }
+
+void Camera::moveCamera(Eigen::Vector3d newPosition) {
+    m_position = newPosition;
+}
+
+void Camera::translateCamera(Eigen::Vector3d displacement) {
+    Camera::moveCamera(m_position + displacement);
+}
+
+void Camera::rotateCamera(Eigen::Vector3d rotationVector) {
+    Eigen::Matrix3d rotationMatrix = rotationVectorToMatrix(rotationVector);
+
+    m_right = rotationMatrix * m_right;
+    m_forward = rotationMatrix * m_forward;
+    m_up = rotationMatrix * m_up;
+}
+
+Eigen::Matrix3d rotationVectorToMatrix(const Eigen::Vector3d& rotation_vector) {
+    // Extract the angle (magnitude of the vector)
+    double angle = rotation_vector.norm();
+
+    // Calculate the normalized axis of rotation
+    Eigen::Vector3d axis = rotation_vector.normalized();
+
+    // Create an AngleAxis object
+    Eigen::AngleAxisd angleAxis(angle, axis);
+
+    // Convert to a rotation matrix
+    return angleAxis.toRotationMatrix();
+}

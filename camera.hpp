@@ -47,4 +47,14 @@ class Camera {
         /// @return The corresponding Ray (custom object)
         Ray getRay(const int i, const int j) const;
 
+        /// @brief Move the camera to the given position. Has no effect on camera orientation.
+        /// @param newPosition The new position where we want the camera (3D Vector)
+        void moveCamera(Eigen::Vector3d newPosition);
+
+        /// @brief Translate the camera along a displacement vector
+        /// @param displacement The displacement vector
+        void translateCamera(Eigen::Vector3d displacement);
+
+        void rotateCamera(Eigen::Vector3d rotationVector);
+
 };
