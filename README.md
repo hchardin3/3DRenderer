@@ -23,7 +23,7 @@ These are the custom commands to use our renderer:
 
     cmake ./CMakeLists.txt
     make all
-    ./MyExecutable.exe
+    ./MyExecutable
 
 We can chain these commands
 - On powershell: 
@@ -32,4 +32,4 @@ We can chain these commands
     
 - On Linux:  
     
-        cmake ./CMakeLists.txt & make all & ./MyExecutable.exe
+        cmake ./CMakeLists.txt & make all & ./MyExecutable
