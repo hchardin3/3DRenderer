@@ -21,4 +21,10 @@ This is the whole scene, that contains one camera and several meshes.
 
 These are the custom commands to use our renderer:
 
-    make && ./main
+    cmake ./CMakeLists.txt
+    make all
+    ./MyExecutable.exe
+
+We can chain these commands
+    - On powershell: cmake ./CMakeLists.txt; make all; ./MyExecutable.exe
+    - On Linux: cmake ./CMakeLists.txt & make all & ./MyExecutable.exe

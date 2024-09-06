@@ -1,11 +1,9 @@
 #include <iostream>
-#include <eigen3/Eigen/Dense>
-#include "camera.hpp"
-#include "mesh.hpp"
-#include "scene.hpp"
-#include "utils.hpp"
-
-
+#include <Eigen/Dense>
+#include "src/camera.hpp"
+#include "src/mesh.hpp"
+#include "src/scene.hpp"
+#include "src/utils.hpp"
 
 
 int main() {

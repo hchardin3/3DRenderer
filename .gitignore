@@ -35,3 +35,7 @@
 main
 .vscode
 Makefile
+Makefile-Backup
+*.cmake
+CMakeFiles
+CMakeCache.txt
