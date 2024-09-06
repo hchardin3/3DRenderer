@@ -26,5 +26,10 @@ These are the custom commands to use our renderer:
     ./MyExecutable.exe
 
 We can chain these commands
-    - On powershell: cmake ./CMakeLists.txt; make all; ./MyExecutable.exe
-    - On Linux: cmake ./CMakeLists.txt & make all & ./MyExecutable.exe
+- On powershell: 
+    
+        cmake ./CMakeLists.txt; make all; ./MyExecutable.exe
+    
+- On Linux:  
+    
+        cmake ./CMakeLists.txt & make all & ./MyExecutable.exe
