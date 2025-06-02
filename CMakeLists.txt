@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(3DRenderer)
 
 # Specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Find and include Eigen3 package
