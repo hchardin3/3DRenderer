@@ -23,13 +23,13 @@ These are the custom commands to use our renderer:
 
     cmake ./CMakeLists.txt
     make all
-    ./MyExecutable
+    ./3DRenderer.exe
 
 We can chain these commands
 - On powershell: 
     
-        cmake ./CMakeLists.txt; make all; ./MyExecutable.exe
+        cmake ./CMakeLists.txt; make all; .\3DRenderer.exe
     
 - On Linux:  
     
-        cmake ./CMakeLists.txt & make all & ./MyExecutable
+        cmake ./CMakeLists.txt & make all & ./3DRenderer
