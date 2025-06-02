@@ -9,25 +9,25 @@
 
 int main() {
 
-    Eigen::Vector3d A, B, C;
+    Eigen::Vector3d A, B, C, D;
     A << -1., 3., 1.;
     B << 1., 3., 1.;
-    C << 5, 3., -1.;
+    C << 1., 3., -1.;
+    D << -1., 3., -1.;
 
+    // Create 2 triangles with the given points
     Triangle triangle(A, B, C);
+    Triangle triangle2(A, C, D);
 
 
-    Camera myCam(1.5, 1.5, 800, 800, 1.0);
+    Camera myCam(1.7, 1.7, 800, 800, 1.0);
     Scene myScene(&myCam);
     Render rdr = myScene.getRender();
 
     // std::cout << rdr.render << std::endl;
 
-    // std::cout << "\n \nNow the testing" << std::endl;
-
-    
-
     myScene.addTriangle(&triangle);
+    myScene.addTriangle(&triangle2);
 
     rdr = myScene.getRender();
     // std::cout << rdr.render << std::endl;
