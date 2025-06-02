@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES ( "${EIGEN3_INCLUDE_DIR}" )
 
 # Add the executables
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-add_executable(MyExecutable main.cpp ${SRC_DIR}/mesh.cpp ${SRC_DIR}/utils.cpp ${SRC_DIR}/camera.cpp ${SRC_DIR}/scene.cpp)
+add_executable(${PROJECT_NAME} main.cpp ${SRC_DIR}/mesh.cpp ${SRC_DIR}/utils.cpp ${SRC_DIR}/camera.cpp ${SRC_DIR}/scene.cpp)
 # target_include_directories(MyExecutable PRIVATE ${SRC_DIR})
 
 # Include Eigen3 directories
