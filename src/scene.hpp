@@ -19,7 +19,7 @@ class Scene {
 
         /// @brief This method analyses what the camera sees on each of its pixels
         /// @return The image frame of the scene through the camera's eye
-        Render getRender();
+        Render getRender() const;
 
         /// @brief A function to add an object to the scene
         /// @param triangle The object to be added (now only Triangle)
