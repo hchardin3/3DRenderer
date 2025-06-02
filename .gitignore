@@ -39,3 +39,4 @@ Makefile-Backup
 *.cmake
 CMakeFiles
 CMakeCache.txt
+./build/**/*.*

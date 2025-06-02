@@ -1,9 +1,11 @@
 #include <iostream>
 #include <Eigen/Dense>
+#include <SFML/Graphics.hpp>
 #include "src/camera.hpp"
 #include "src/mesh.hpp"
 #include "src/scene.hpp"
 #include "src/utils.hpp"
+#include "src/display.hpp"
 
 
 int main() {
@@ -30,6 +32,29 @@ int main() {
 
     rdr = myScene.getRender();
     std::cout << rdr.render << std::endl;
+
+    //Display myDisplay;
+    //myDisplay.displayRenderAsImage(myScene);
+
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+
+    printf("Rendering the scene...\n");
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+        window.draw(shape);
+        window.display();
+    }
 
     return 0;
 }

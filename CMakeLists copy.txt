@@ -1,0 +1,59 @@
+cmake_minimum_required(VERSION 3.10)
+
+# Enable debug symbols by default
+# must be done before project() statement
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+endif()
+# (you can also set it on the command line: -D CMAKE_BUILD_TYPE=Release)
+
+project(3DRenderer)
+
+# Specify the C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(EIGEN3_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Include/eigen3)
+set(SFML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Include/SFML-2.6.1)
+
+# Find and include Eigen3 package
+# IF( NOT EIGEN3_INCLUDE_DIR )
+#     MESSAGE( FATAL_ERROR "Please point the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
+# ENDIF()
+
+
+# Add the executables
+add_executable(MyExecutable main.cpp ${SRC_DIR}/mesh.cpp ${SRC_DIR}/utils.cpp ${SRC_DIR}/camera.cpp ${SRC_DIR}/scene.cpp ${SRC_DIR}/display.cpp)
+
+
+
+set(SFML_LIBRARY_DIR ${SFML_DIR}/lib)
+# find_library(SFML_LIBRARY sfml-main PATHS ${SFML_LIBRARY_DIR})
+# target_link_libraries(MyExecutable PUBLIC ${SFML_LIBRARY})
+
+set(SFML_INCLUDE_DIR ${SFML_DIR}/include)
+# add_library(SFML STATIC IMPORTED) # or STATIC instead of SHARED
+# set_target_properties(SFML PROPERTIES
+#   IMPORTED_LOCATION ${SFML_LIBRARY_DIR}
+#   INTERFACE_INCLUDE_DIRECTORIES ${SFML_INCLUDE_DIR}
+# )
+# target_link_libraries(MyExecutable PUBLIC SFML)
+
+find_library(SFML_GRAPHICS_LIBRARY sfml-graphics sfml-main sfml-window sfml-system PATHS ${SFML_LIBRARY_DIR})
+
+# find_library(SFML_GRAPHICS_LIBRARY sfml-main-d sfml-graphics-d sfml-window-d sfml-system-d vorbis openal32 ogg freetype FLAC PATHS ${SFML_LIBRARY_DIR})
+
+# Link SFML libraries (for linker)
+target_link_libraries(MyExecutable PUBLIC ${SFML_GRAPHICS_LIBRARY})
+
+# Include SFML directories (header files)
+target_include_directories(MyExecutable PRIVATE ${SFML_INCLUDE_DIR})
+
+# Include Eigen3 directories (no need to link Eigen3 libraries since it is a header-only library)
+target_include_directories(MyExecutable PRIVATE ${EIGEN3_INCLUDE_DIR})
+
+message(${SFML_DIR})
+message(${SFML_LIBRARY_DIR})
+message(${SFML_INCLUDE_DIR})
+message(${SFML_GRAPHICS_LIBRARY})
