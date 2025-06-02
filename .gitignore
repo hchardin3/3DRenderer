@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# Code outputs
+*.csv
+*.bmp
+
 # Pas touche
 main
 .vscode
