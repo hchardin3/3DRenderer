@@ -3,7 +3,7 @@
 Scene::Scene(Camera* camera) :
     m_camera(camera) {}
 
-Render Scene::getRender() {
+Render Scene::getRender() const {
     std::tuple<int, int> resolution = m_camera->getDimensions();
     Render my_render(resolution);
 
