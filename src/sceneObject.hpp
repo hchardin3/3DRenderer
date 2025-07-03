@@ -13,6 +13,9 @@ class SceneObject {
         /// @brief The right vector of the object in the global frame
         Eigen::Vector3d m_right;
 
+        /// @brief The rotation matrix of the object in the global frame
+        Eigen::Matrix3d m_rotationMatrix;
+
     protected:
         /// @brief The position of the object in the global frame
         Eigen::Vector3d m_position;
@@ -28,6 +31,10 @@ class SceneObject {
         /// @brief A method to get the right vector of the object in the global frame
         /// @return The right vector of the object in global frame
         const Eigen::Vector3d& getRight() const { return m_right; }
+
+        /// @brief A method to get the rotation matrix of the object in the global frame
+        /// @return The rotation matrix of the object in global frame
+        const Eigen::Matrix3d& getRotationMatrix() const { return m_rotationMatrix; }
     
     public:
         /// @brief A simple scene object that can be placed in the scene

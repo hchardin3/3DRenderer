@@ -1,7 +1,7 @@
 #include "sceneObject.hpp"
 
 SceneObject::SceneObject(const Eigen::Vector3d& position, const Eigen::Vector3d& up, const Eigen::Vector3d& forward) :
-         m_position(position) 
+         m_position(position)
 {
     // Ensure that the forward vector is not zero
     if (forward.isZero()) {
@@ -27,13 +27,23 @@ SceneObject::SceneObject(const Eigen::Vector3d& position, const Eigen::Vector3d&
     // Re-orthogonalize up in case up and forward were not perfectly orthogonal
     m_up = m_forward.cross(m_right).normalized();
 
+    // Set the rotation matrix
+    m_rotationMatrix.col(0) = m_right;  // Right vector
+    m_rotationMatrix.col(1) = m_up;     // Up vector
+    m_rotationMatrix.col(2) = m_forward; // Forward vector
 }
 
 void SceneObject::rotate(const Eigen::Vector3d& axis, double angle) {
     Eigen::AngleAxisd rotation(angle, axis.normalized());
-    m_forward = rotation * m_forward;
-    m_up = rotation * m_up;
-    m_right = rotation * m_right;
+    Eigen::Matrix3d rot = rotation.toRotationMatrix();
+    m_forward = rot * m_forward;
+    m_up = rot * m_up;
+    m_right = rot * m_right;
+
+    // Set the rotation matrix
+    m_rotationMatrix.col(0) = m_right;  // Right vector
+    m_rotationMatrix.col(1) = m_up;     // Up vector
+    m_rotationMatrix.col(2) = m_forward; // Forward vector
 }
 
 /// @brief Convert a rotation vector to a rotation matrix
@@ -59,4 +69,9 @@ void SceneObject::rotate(Eigen::Vector3d& rotationVector) {
     m_right = rotationMatrix * m_right;
     m_forward = rotationMatrix * m_forward;
     m_up = rotationMatrix * m_up;
+
+    // Set the rotation matrix
+    m_rotationMatrix.col(0) = m_right;  // Right vector
+    m_rotationMatrix.col(1) = m_up;     // Up vector
+    m_rotationMatrix.col(2) = m_forward; // Forward vector
 }
