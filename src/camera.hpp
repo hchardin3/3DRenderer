@@ -3,24 +3,36 @@
 #include <Eigen/Dense>
 #include <tuple>
 #include "utils.hpp"
+#include "sceneObject.hpp"
 
-class Camera {
+class Camera : public SceneObject {
     private:
-        Eigen::Vector3d m_position;
-        Eigen::Vector3d m_up;
-        Eigen::Vector3d m_forward;
-        Eigen::Vector3d m_right;
-
+        /// @brief The horizontal field of view (in radian)
         double m_horizontalFOV;
+
+        /// @brief The vertical field of view (in radian)
         double m_verticalFOV;
+
+        /// @brief The horizontal resolution (in number of pixels)
         int m_horizontalResolution;
+
+        /// @brief The vertical resolution (in number of pixels)
         int m_verticalResolution;
+
+        /// @brief The horizontal field of view in radians per pixel
         double m_horizontalRadPerPixel;
+
+        /// @brief The vertical field of view in radians per pixel
         double m_verticalRadPerPixel;
+
+        /// @brief The distance between the eye and the projection plane (in meters)
+        /// @note This is the distance from the camera to the projection plane where the pixels are
         double m_distance;
 
+        /// @brief The renderer matrix that will hold the rendered image
+        /// @note This is a matrix of size (horizontalResolution, verticalResolution)
+        /// @note The matrix is initialized to zero and will be filled with pixel values during rendering
         Eigen::MatrixXd m_renderer;
-
 
     public:
         /// @brief The camera is assumed to be initialized at the origin, facing the y-axis. 
@@ -29,7 +41,7 @@ class Camera {
         /// @param horizontalResolution The horizontal resolution (in number of pixels)
         /// @param verticalResolution The vertical field of vue (in number of pixels)
         /// @param distance The distance between the eye and the projection plane (in meters)
-        Camera(double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance);
+        Camera(Eigen::Vector3d position, double horizontalFOV, double verticalFOV,  int horizontalResolution,  int verticalResolution,  double distance);
 
         /// @brief Return the number of pixels per lines and columns
         /// @return A tuple of two integers: the number of vertical and horizontal pixels
@@ -46,15 +58,4 @@ class Camera {
         /// @param j The horizontal index of the pixel in the frame
         /// @return The corresponding Ray (custom object)
         Ray getRay(const int i, const int j) const;
-
-        /// @brief Move the camera to the given position. Has no effect on camera orientation.
-        /// @param newPosition The new position where we want the camera (3D Vector)
-        void moveCamera(Eigen::Vector3d newPosition);
-
-        /// @brief Translate the camera along a displacement vector
-        /// @param displacement The displacement vector
-        void translateCamera(Eigen::Vector3d displacement);
-
-        void rotateCamera(Eigen::Vector3d rotationVector);
-
 };

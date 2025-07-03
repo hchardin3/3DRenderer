@@ -10,17 +10,21 @@
 int main() {
 
     Eigen::Vector3d A, B, C, D;
-    A << -1., 3., 1.;
-    B << 1., 3., 1.;
-    C << 1., 3., -1.;
-    D << -1., 3., -1.;
+    A << -1., 1., 0.;
+    B << 1., 1., 0.;
+    C << 1., -1., 0.;
+    D << -1., -1., 0.;
+
+    Eigen::Vector3d position(0, 0, 3);
 
     // Create 2 triangles with the given points
-    Triangle triangle(A, B, C);
-    Triangle triangle2(A, C, D);
+    Triangle triangle(position, A, B, C);
+    Triangle triangle2(position, A, C, D);
 
+    Eigen::Vector3d cameraPosition(0, 0, 0);
+    Camera myCam(cameraPosition, 1.7, 1.7, 800, 800, 1.0);
+    myCam.rotate(Eigen::Vector3d::UnitY(), 0.5); // Rotate the camera 45 degrees around the Y-axis
 
-    Camera myCam(1.7, 1.7, 800, 800, 1.0);
     Scene myScene(&myCam);
     Render rdr = myScene.getRender();
 

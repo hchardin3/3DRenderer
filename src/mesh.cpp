@@ -1,6 +1,7 @@
 #include "mesh.hpp"
 
-Triangle::Triangle(Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector3d point2, bool invert) :
+Triangle::Triangle(Eigen::Vector3d position, Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector3d point2, bool invert) :
+        SceneObject(position, Eigen::Vector3d::UnitY(), Eigen::Vector3d::UnitZ()),
         m_point0(point0),
         m_point1(point1),
         m_point2(point2) 
@@ -14,9 +15,9 @@ Triangle::Triangle(Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector
 Eigen::Vector3d Triangle::getPoint(int i) const {
     switch (i)
     {
-    case 0: return m_point0;
-    case 1: return m_point1;
-    case 2: return m_point2;
+    case 0: return m_position + m_point0;
+    case 1: return m_position + m_point1;
+    case 2: return m_position + m_point2;
     
     default:
         std::raise(SIGSEGV);

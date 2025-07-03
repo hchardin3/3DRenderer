@@ -26,6 +26,6 @@ struct Ray {
 /// @brief Return true if the ray intersects the triangle
 /// @param R The Ray
 /// @param triangle The triangle
-/// @param t 
+/// @param t The distance from the ray origin to the intersection point (IP): IP = R.Origin + t * R.Dir
 /// @return true if the Ray intersect the object, false otherwise
 bool intersect_triangle(Ray R, Triangle triangle, float& t);
