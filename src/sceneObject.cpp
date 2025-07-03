@@ -1,7 +1,5 @@
 #include "sceneObject.hpp"
 
-#include <iostream>
-
 SceneObject::SceneObject(const Eigen::Vector3d& position, const Eigen::Vector3d& up, const Eigen::Vector3d& forward) :
          m_position(position) 
 {
@@ -24,10 +22,11 @@ SceneObject::SceneObject(const Eigen::Vector3d& position, const Eigen::Vector3d&
     m_forward = forward.normalized();
 
     // Compute right as cross product of forward and up
-    m_right = m_forward.cross(up).normalized();
+    m_right = up.cross(m_forward).normalized();
 
     // Re-orthogonalize up in case up and forward were not perfectly orthogonal
-    m_up = m_right.cross(m_forward).normalized();
+    m_up = m_forward.cross(m_right).normalized();
+
 }
 
 void SceneObject::rotate(const Eigen::Vector3d& axis, double angle) {
