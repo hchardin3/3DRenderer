@@ -10,6 +10,10 @@ Triangle::Triangle(Eigen::Vector3d position, Eigen::Vector3d point0, Eigen::Vect
     Eigen::Vector3d b{point2 - point1};
 
     m_normal = invert ? -a.cross(b) : a.cross(b);
+    if (m_normal.norm() == 0) {
+        throw std::invalid_argument("The points of the triangle must not be collinear.");
+    }
+    m_normal.normalize(); // Ensure the normal vector is normalized
 }
 
 Eigen::Vector3d Triangle::getPoint(int i) const {
