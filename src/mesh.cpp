@@ -17,14 +17,22 @@ Triangle::Triangle(Eigen::Vector3d position, Eigen::Vector3d point0, Eigen::Vect
 }
 
 Eigen::Vector3d Triangle::getPoint(int i) const {
+    Eigen::Vector3d point;
     switch (i)
     {
-    case 0: return m_position + m_point0;
-    case 1: return m_position + m_point1;
-    case 2: return m_position + m_point2;
+    case 0: point = m_point0; break;
+    case 1: point = m_point1; break;
+    case 2: point = m_point2; break;
     
     default:
         std::raise(SIGSEGV);
         return Eigen::Vector3d::Zero();
     }
+
+    return m_position + getRotationMatrix().inverse() * point;
+}
+
+const Eigen::Vector3d Triangle::getNormal() const { 
+    // Rotate the normal vector by the object's rotation
+    return getRotationMatrix() * m_normal;
 }

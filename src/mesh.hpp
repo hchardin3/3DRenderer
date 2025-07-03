@@ -26,5 +26,8 @@ class Triangle : public SceneObject {
         /// @return The position vector of the vertex of the triangle in the global frame
         Eigen::Vector3d getPoint(int i) const;
 
+        /// @brief A method to get the normal vector of the triangle
+        /// @return The normal vector of the triangle in the global frame
+        const Eigen::Vector3d getNormal() const;
 };
 
