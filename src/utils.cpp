@@ -12,7 +12,7 @@ Render::Render(std::tuple<int, int> resolution) :
 // The intersect_triangle method is based on the algorithm described by BrunoLevy at:
 // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 //
-bool intersect_triangle(const Ray R, const Triangle triangle, float& t) {
+bool intersect_triangle(const Ray R, const Triangle triangle, float& u, float& v, float& t) {
     Eigen::Vector3d A = triangle.getPoint(0);
     Eigen::Vector3d B = triangle.getPoint(1);
     Eigen::Vector3d C = triangle.getPoint(2);
@@ -26,8 +26,8 @@ bool intersect_triangle(const Ray R, const Triangle triangle, float& t) {
     Eigen::Vector3d DAO = AO.cross(R.direction);
 
     // Calculate the barycentric coordinates of the intersection (u, v, 1-u-v) 
-    float u =  E2.dot(DAO) * invdet;
-    float v = -E1.dot(DAO) * invdet;
+    u =  E2.dot(DAO) * invdet;
+    v = -E1.dot(DAO) * invdet;
 
     // Calculate the distance from the ray origin to the intersection point
     t = AO.dot(N)  * invdet;

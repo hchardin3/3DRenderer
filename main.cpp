@@ -1,10 +1,12 @@
 #include <iostream>
 #include <Eigen/Dense>
+#include <math.h>
 #include "src/camera.hpp"
 #include "src/mesh.hpp"
 #include "src/scene.hpp"
 #include "src/utils.hpp"
 #include "src/exporter.hpp"
+#include "src/light.hpp"
 
 
 int main() {
@@ -18,24 +20,37 @@ int main() {
     Eigen::Vector3d position(0, 0, 3);
 
     // Create 2 triangles with the given points
-    Triangle triangle(position, A, B, C);
-    Triangle triangle2(position, A, C, D);
+    Triangle triangle(position, A, B, C, true);
+    // triangle.rotate(Eigen::Vector3d::UnitY(), M_PI); // Rotate the triangle around the Y-axis
+    Triangle triangle2(position, A, C, D, true);
+    // triangle2.rotate(Eigen::Vector3d::UnitY(), M_PI); // Rotate the second triangle around the Y-axis
+    triangle2.rotate(Eigen::Vector3d::UnitX(), M_PI / 4); // Rotate the second triangle around the X-axis
 
+    // Create a light source
+    Eigen::Vector3d lightPosition(0, 5, 0);
+    Eigen::Vector3d lightColor(1, 1, 1); // White light
+    unsigned char lightIntensity(255); // Intensity of the light source
+    LightSource light(lightPosition, lightColor, lightIntensity);
+
+    // Create a camera
+    // The camera is initialized at the origin, facing the Y-axis
     Eigen::Vector3d cameraPosition(0, 0, 0);
     Camera myCam(cameraPosition, 1.7, 1.7, 800, 800, 1.0);
-    myCam.rotate(Eigen::Vector3d::UnitY(), 0.5); // Rotate the camera 45 degrees around the Y-axis
+    // myCam.rotate(Eigen::Vector3d::UnitY(), 0.5); // Rotate the camera around the Y-axis
 
+    // Create a scene with the camera
     Scene myScene(&myCam);
-    Render rdr = myScene.getRender();
+    myScene.setLightSource(&light); // Set the light source in the scene
 
-    // std::cout << rdr.render << std::endl;
-
+    // Add triangles to the scene
     myScene.addTriangle(&triangle);
     myScene.addTriangle(&triangle2);
 
-    rdr = myScene.getRender();
+    // Render the scene with the triangles
+    Render rdr = myScene.getRender();
     // std::cout << rdr.render << std::endl;
 
+    // Export the render to a bitmap file
     auto exporter = MakeExporter(rdr.render);
     exporter.toBitmap("render.bmp");
 
