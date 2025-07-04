@@ -1,15 +1,32 @@
 #include "scene.hpp"
 
+#include <iostream>
+#include <chrono>
+using namespace std::chrono;
+
 Scene::Scene(Camera* camera) :
     m_camera(camera) {}
 
 Render Scene::getRender() const {
-    std::tuple<int, int> resolution = m_camera->getDimensions();
-    Render my_render(resolution);
+    auto t0 = high_resolution_clock::now();
 
-    for(int i(0); i<std::get<0>(resolution); ++i) {
-        for(int j(0); j<std::get<1>(resolution); ++j) {
-            Ray ray = m_camera->getRay(i, j);
+    const std::tuple<const int, const int> dimensions = m_camera->getDimensions();
+    const int verticalResolution = std::get<0>(dimensions);
+    const int horizontalResolution = std::get<1>(dimensions);
+
+    auto t1 = high_resolution_clock::now();
+
+    Render my_render(verticalResolution, horizontalResolution);
+
+    auto t2 = high_resolution_clock::now();
+
+    const std::vector<Ray>& rays = m_camera->getRays(); // Generate rays from the camera
+
+    auto t3 = high_resolution_clock::now();
+
+    for(int i(0); i<verticalResolution; ++i) {
+        for(int j(0); j<horizontalResolution; ++j) {
+            const Ray& ray = rays[i * horizontalResolution + j];
 
             bool intersect(false);
             float t, u, v;
@@ -19,7 +36,7 @@ Render Scene::getRender() const {
                 if(intersect_triangle(ray, *triangle, u, v, t)) {
                     if (!intersect || t < t_opt) {
                         t_opt = t; // Update the closest intersection distance
-                    intersect = true;
+                        intersect = true;
                         hit_triangle = triangle;
                     }
                 }
@@ -47,6 +64,19 @@ Render Scene::getRender() const {
             }
         }
     }
+
+    auto t4 = high_resolution_clock::now();
+
+    std::cout << "Time taken for resolution: "
+              << duration_cast<milliseconds>(t1 - t0).count() << " ms" << std::endl;
+    std::cout << "Time taken for render: "
+              << duration_cast<milliseconds>(t2 - t1).count() << " ms" << std::endl;
+    std::cout << "Time taken for ray generation: "
+                << duration_cast<milliseconds>(t3 - t2).count() << " ms" << std::endl;
+    std::cout << "Time taken for intersection: "
+                << duration_cast<milliseconds>(t4 - t3).count() << " ms" << std::endl;
+    std::cout << "Total time taken: "
+              << duration_cast<milliseconds>(t4 - t0).count() << " ms"  << std::endl;
 
     return my_render;
 }
