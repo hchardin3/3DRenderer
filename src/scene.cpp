@@ -13,19 +13,22 @@ Render Scene::getRender() const {
 
             bool intersect(false);
             float t, u, v;
-            Triangle* hit_triangle = nullptr;
+            float t_opt; // Initialize t_opt to a small value
+            const Triangle* hit_triangle = nullptr;
             for (const Triangle* triangle : m_listOfObjects) {
                 if(intersect_triangle(ray, *triangle, u, v, t)) {
+                    if (!intersect || t < t_opt) {
+                        t_opt = t; // Update the closest intersection distance
                     intersect = true;
-                    hit_triangle = const_cast<Triangle*>(triangle); // Cast away constness to modify the triangle
-                    break;
+                        hit_triangle = triangle;
+                    }
                 }
             }
 
 
             if(intersect) {
                 Eigen::Vector3d triangle_normal = hit_triangle->getNormal(); // Get the normal vector of the triangle
-                Eigen::Vector3d hit_position = ray.origin + ray.direction * t; // Calculate the intersection point
+                Eigen::Vector3d hit_position = ray.origin + ray.direction * t_opt; // Calculate the intersection point
                 Eigen::Vector3d lightDirection = m_lightSource->getPosition() - hit_position;
                 lightDirection.normalize(); // Normalize the light direction vector
 
