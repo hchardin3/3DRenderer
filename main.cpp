@@ -27,21 +27,8 @@ int main() {
     // triangle.rotate(Eigen::Vector3d::UnitY(), M_PI); // Rotate the triangle around the Y-axis
     Triangle triangle2(position, A, C, D, true);
 
-
-    std::cout << "Triangle 2 points:" << std::endl;
-    std::cout << "Point 0: " << triangle2.getPoint(0).transpose() << std::endl;
-    std::cout << "Point 1: " << triangle2.getPoint(1).transpose() << std::endl;
-    std::cout << "Point 2: " << triangle2.getPoint(2).transpose() << std::endl;
-    std::cout << "Triangle 2 normal: " << triangle2.getNormal().transpose() << std::endl;
-
     // triangle2.rotate(Eigen::Vector3d::UnitY(), M_PI); // Rotate the second triangle around the Y-axis
     triangle2.rotate(Eigen::Vector3d::UnitX(), M_PI / 4); // Rotate the second triangle around the X-axis
-
-    std::cout << "Triangle 2 points:" << std::endl;
-    std::cout << "Point 0: " << triangle2.getPoint(0).transpose() << std::endl;
-    std::cout << "Point 1: " << triangle2.getPoint(1).transpose() << std::endl;
-    std::cout << "Point 2: " << triangle2.getPoint(2).transpose() << std::endl;
-    std::cout << "Triangle 2 normal: " << triangle2.getNormal().transpose() << std::endl;
 
     // Create a light source
     Eigen::Vector3d lightPosition(0, 0, 0);
@@ -63,11 +50,9 @@ int main() {
     myScene.addTriangle(&triangle);
     myScene.addTriangle(&triangle2);
 
-    std::cout << "Scene created with triangles..." << std::endl;
+    std::cout << "Scene created with triangles." << std::endl;
 
     auto start = high_resolution_clock::now();
-
-    std::cout << "Rendering the scene with scene " << &myScene << std::endl;
 
     // Render the scene with the triangles
     Render rdr = myScene.getRender();
