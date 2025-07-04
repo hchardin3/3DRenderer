@@ -42,7 +42,7 @@ Render Scene::getRender() const {
                     // std::cout << m_lightSource->getIntensity() << std::endl;
                     my_render.render(i, j) = intensity; // Set the pixel color in the render
                 } else {
-                    my_render.render(i, j) = 0; // If not lit, set pixel to black
+                    my_render.render(i, j) = 10; // If not lit, set pixel to black
                 }
             }
         }
