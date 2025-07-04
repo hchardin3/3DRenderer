@@ -13,9 +13,9 @@ Render::Render(std::tuple<int, int> resolution) :
 // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 //
 bool intersect_triangle(const Ray R, const Triangle triangle, float& u, float& v, float& t) {
-    Eigen::Vector3d A = triangle.getPoint(0);
-    Eigen::Vector3d B = triangle.getPoint(1);
-    Eigen::Vector3d C = triangle.getPoint(2);
+    const Eigen::Vector3d& A = triangle.getPoint(0);
+    const Eigen::Vector3d& B = triangle.getPoint(1);
+    const Eigen::Vector3d& C = triangle.getPoint(2);
 
     Eigen::Vector3d E1 = B-A;
     Eigen::Vector3d E2 = C-A;
@@ -30,7 +30,7 @@ bool intersect_triangle(const Ray R, const Triangle triangle, float& u, float& v
     v = -E1.dot(DAO) * invdet;
 
     // Calculate the distance from the ray origin to the intersection point
-    t = AO.dot(N)  * invdet;
+    t = AO.dot(N) * invdet;
 
     return (std::fabs(det) >= 1e-6 && t >= 0 && u >= 0 && v >= 0 && (u+v) <= 1);
 }

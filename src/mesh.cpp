@@ -14,25 +14,37 @@ Triangle::Triangle(Eigen::Vector3d position, Eigen::Vector3d point0, Eigen::Vect
         throw std::invalid_argument("The points of the triangle must not be collinear.");
     }
     m_normal.normalize(); // Ensure the normal vector is normalized
+
+    updatePoints(); // Initialize global points and normal
 }
 
-Eigen::Vector3d Triangle::getPoint(int i) const {
-    Eigen::Vector3d point;
+void Triangle::updatePoints() {
+    // The inverse rotation matrix is the transpose of the rotation matrix
+    Eigen::Matrix3d inv_rot = getRotationMatrix().transpose();
+
+    // Update the global points based on the position and rotation of the triangle
+    m_global_point0 = m_position + inv_rot * m_point0;
+    m_global_point1 = m_position + inv_rot * m_point1;
+    m_global_point2 = m_position + inv_rot * m_point2;
+
+    // Update the global normal vector
+    m_global_normal = inv_rot * m_normal;
+}
+
+const Eigen::Vector3d& Triangle::getPoint(int i) const {
     switch (i)
     {
-    case 0: point = m_point0; break;
-    case 1: point = m_point1; break;
-    case 2: point = m_point2; break;
+    case 0: return m_global_point0;
+    case 1: return m_global_point1;
+    case 2: return m_global_point2;
     
     default:
         std::raise(SIGSEGV);
-        return Eigen::Vector3d::Zero();
+        return m_global_point0; // This line will never be reached, but it avoids a warning
     }
-
-    return m_position + getRotationMatrix().inverse() * point;
 }
 
-const Eigen::Vector3d Triangle::getNormal() const { 
+const Eigen::Vector3d& Triangle::getNormal() const { 
     // Rotate the normal vector by the object's rotation
-    return getRotationMatrix() * m_normal;
+    return m_global_normal;
 }
