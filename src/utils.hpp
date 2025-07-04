@@ -6,8 +6,10 @@
 
 struct Render
 {
-    typedef Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> MatrixXchar;
+    typedef Eigen::Matrix<unsigned char, Eigen::Dynamic, 3> MatrixXchar;
     MatrixXchar render;
+
+    const int verticalResolution, horizontalResolution;
 
     /// @brief The image frame to be printed on the user's screen
     /// @param verticalResolution 

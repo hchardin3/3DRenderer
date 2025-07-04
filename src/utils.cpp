@@ -1,11 +1,13 @@
 #include "utils.hpp"
 
 Render::Render(int verticalResolution, int horizontalResolution) :
-    render(MatrixXchar::Zero(verticalResolution, horizontalResolution)) {
+    render(MatrixXchar::Zero(verticalResolution * horizontalResolution, 3)),
+    verticalResolution(verticalResolution), horizontalResolution(horizontalResolution) {
 }
 
 Render::Render(std::tuple<int, int> resolution) :
-    render(MatrixXchar::Zero(std::get<0>(resolution), std::get<1>(resolution))) {
+    render(MatrixXchar::Zero(std::get<0>(resolution) * std::get<1>(resolution), 3)),
+    verticalResolution(std::get<0>(resolution)), horizontalResolution(std::get<1>(resolution)) {
 }
 
 //

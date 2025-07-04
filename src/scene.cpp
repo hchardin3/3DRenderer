@@ -24,43 +24,47 @@ Render Scene::getRender() const {
 
     auto t3 = high_resolution_clock::now();
 
-    for(int i(0); i<verticalResolution; ++i) {
-        for(int j(0); j<horizontalResolution; ++j) {
-            const Ray& ray = rays[i * horizontalResolution + j];
+    // Iterate through each pixel in the frame
+    // Each pixel corresponds to a ray in the rays vector
+    for (int linear_id(0); linear_id < verticalResolution * horizontalResolution; ++linear_id) 
+    {
+        const Ray& ray = rays[linear_id];
 
-            bool intersect(false);
-            float t, u, v;
-            float t_opt; // Initialize t_opt to a small value
-            const Triangle* hit_triangle = nullptr;
-            for (const Triangle* triangle : m_listOfObjects) {
-                if(intersect_triangle(ray, *triangle, u, v, t)) {
-                    if (!intersect || t < t_opt) {
-                        t_opt = t; // Update the closest intersection distance
-                        intersect = true;
-                        hit_triangle = triangle;
-                    }
+        bool intersect(false);
+        float t, u, v;
+        float t_opt; // Initialize t_opt to a small value
+        const Triangle* hit_triangle = nullptr;
+        for (const Triangle* triangle : m_listOfObjects) {
+            if(intersect_triangle(ray, *triangle, u, v, t)) {
+                if (!intersect || t < t_opt) {
+                    t_opt = t; // Update the closest intersection distance
+                    intersect = true;
+                    hit_triangle = triangle;
                 }
             }
+        }
 
 
-            if(intersect) {
-                Eigen::Vector3d triangle_normal = hit_triangle->getNormal(); // Get the normal vector of the triangle
-                Eigen::Vector3d hit_position = ray.origin + ray.direction * t_opt; // Calculate the intersection point
-                Eigen::Vector3d lightDirection = m_lightSource->getPosition() - hit_position;
-                lightDirection.normalize(); // Normalize the light direction vector
+        if(intersect) {
+            Eigen::Vector3d triangle_normal = hit_triangle->getNormal(); // Get the normal vector of the triangle
+            Eigen::Vector3d hit_position = ray.origin + ray.direction * t_opt; // Calculate the intersection point
+            Eigen::Vector3d lightDirection = m_lightSource->getPosition() - hit_position;
+            lightDirection.normalize(); // Normalize the light direction vector
 
-                // Calculate the dot product between the triangle normal and the light direction
-                float dotProduct = triangle_normal.dot(lightDirection);
-                // If the dot product is positive, the triangle is lit by the light source
-                if (dotProduct > 0) {
-                    // Calculate the color intensity based on the dot product
-                    unsigned char intensity = dotProduct * m_lightSource->getIntensity();
-                    // std::cout << "Pixel (" << i << ", " << j << ") is lit with intensity: " << static_cast<int>(intensity) << std::endl;
-                    // std::cout << m_lightSource->getIntensity() << std::endl;
-                    my_render.render(i, j) = intensity; // Set the pixel color in the render
-                } else {
-                    my_render.render(i, j) = 10; // If not lit, set pixel to black
-                }
+            // Calculate the dot product between the triangle normal and the light direction
+            float dotProduct = triangle_normal.dot(lightDirection);
+            // If the dot product is positive, the triangle is lit by the light source
+            if (dotProduct > 0) {
+                // Calculate the color intensity based on the dot product
+                unsigned char intensity = dotProduct * m_lightSource->getIntensity();
+                // std::cout << "Pixel (" << i << ", " << j << ") is lit with intensity: " << static_cast<int>(intensity) << std::endl;
+                // std::cout << m_lightSource->getIntensity() << std::endl;
+
+                my_render.render(linear_id, 0) = intensity; // Set the pixel color in the render
+                my_render.render(linear_id, 1) = intensity; // Set the pixel color in the render
+                my_render.render(linear_id, 2) = intensity; // Set the pixel color in the render
+            } else {
+                my_render.render(linear_id, 0) = 10;
             }
         }
     }
