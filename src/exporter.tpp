@@ -8,8 +8,8 @@ void Exporter<ArrayType>::toBitmap(const std::string& filename) const
     assert(m_image.rows() > 0 && m_image.cols() > 0 && "The image must not be empty");
 
     // Image dimensions
-    const int WIDTH = m_image.cols();
-    const int HEIGHT = m_image.rows();
+    const int WIDTH = m_width;
+    const int HEIGHT = m_height;
 
     // Bitmap header fields
     unsigned int headers[13];
@@ -91,9 +91,11 @@ void Exporter<ArrayType>::toBitmap(const std::string& filename) const
     for (y = HEIGHT - 1; y >= 0; y--) {
         for (x = 0; x <= WIDTH - 1; x++) {
             // Get the pixel color values
-            red = m_image(y, x);
-            green = m_image(y, x);
-            blue = m_image(y, x);
+            int linear_id = y * WIDTH + x;
+
+            red = m_image(linear_id, 0);
+            green = m_image(linear_id, 1);
+            blue = m_image(linear_id, 2);
 
             if (red > 255) red = 255; if (red < 0) red = 0;
             if (green > 255) green = 255; if (green < 0) green = 0;
@@ -116,13 +118,16 @@ void Exporter<ArrayType>::toBitmap(const std::string& filename) const
 template<typename ArrayType>
 void Exporter<ArrayType>::toCSV(const std::string& filename) const
 {
-    assert(m_image.rows() > 0 && m_image.cols() > 0 && "The image must not be empty");
-
     std::ofstream outfile(filename);
 
-    for (int i = 0; i < m_image.rows(); ++i) {
-        for (int j = 0; j < m_image.cols(); ++j) {
-            outfile << int(m_image(i, j));
+    for (int i = 0; i < m_height; ++i) {
+        for (int j = 0; j < m_width; ++j) {
+            int linear_id = i * m_width + j;
+            int color = (m_image(linear_id, 0) + 
+                        m_image(linear_id, 1) + 
+                        m_image(linear_id, 2)) / 3;
+            
+            outfile << color; // Write the average color value
             if (j < m_image.cols() - 1) {
                 outfile << ", ";
             }

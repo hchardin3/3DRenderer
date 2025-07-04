@@ -13,6 +13,8 @@ using namespace std::chrono;
 
 
 int main() {
+    constexpr int WIDTH = 800;
+    constexpr int HEIGHT = 800;
 
     Eigen::Vector3d A, B, C, D;
     A << -1., 1., 0.;
@@ -31,7 +33,7 @@ int main() {
     triangle2.rotate(Eigen::Vector3d::UnitX(), M_PI / 4); // Rotate the second triangle around the X-axis
 
     // Create a light source
-    Eigen::Vector3d lightPosition(0, 0, 0);
+    Eigen::Vector3d lightPosition(0, 5, 0);
     Eigen::Vector3d lightColor(1, 1, 1); // White light
     unsigned char lightIntensity(255); // Intensity of the light source
     LightSource light(lightPosition, lightColor, lightIntensity);
@@ -39,7 +41,7 @@ int main() {
     // Create a camera
     // The camera is initialized at the origin, facing the Y-axis
     Eigen::Vector3d cameraPosition(0, 0, 0);
-    Camera myCam(cameraPosition, 1.7, 1.7, 800, 800, 1.0);
+    Camera myCam(cameraPosition, 1.7, 1.7, WIDTH, HEIGHT, 1.0);
     // myCam.rotate(Eigen::Vector3d::UnitY(), 0.5); // Rotate the camera around the Y-axis
 
     // Create a scene with the camera
@@ -65,7 +67,7 @@ int main() {
               << " milliseconds." << std::endl;
 
     // Export the render to a bitmap file
-    auto exporter = MakeExporter(rdr.render);
+    auto exporter = MakeExporter(rdr.render, rdr.verticalResolution, rdr.horizontalResolution);
 
     std::cout << "Exporting render to bitmap..." << std::endl;
     
