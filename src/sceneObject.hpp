@@ -73,5 +73,5 @@ class SceneObject {
         /// @param rotationVector The rotation vector (angle and axis of rotation)
         /// @note The rotation is applied to the forward, up, and right vectors of the object.
         /// @note The rotation vector is expected to be in the form of (angle * axis)
-        void rotate(Eigen::Vector3d& rotationVector);
+        void rotate(const Eigen::Vector3d& rotationVector);
 };

@@ -63,7 +63,7 @@ Eigen::Matrix3d rotationVectorToMatrix(const Eigen::Vector3d& rotation_vector) {
     return angleAxis.toRotationMatrix();
 }
 
-void SceneObject::rotate(Eigen::Vector3d& rotationVector) {
+void SceneObject::rotate(const Eigen::Vector3d& rotationVector) {
     Eigen::Matrix3d rotationMatrix = rotationVectorToMatrix(rotationVector);
 
     m_right = rotationMatrix * m_right;
