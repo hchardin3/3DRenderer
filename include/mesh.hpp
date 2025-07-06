@@ -5,6 +5,7 @@
 #include <csignal>
 #include "sceneObject.hpp"
 #include "Structures/ray.hpp"
+#include "Structures/box.hpp"
 
 class Triangle : public SceneObject {
     private:
@@ -25,9 +26,7 @@ class Triangle : public SceneObject {
         Eigen::Vector3d m_global_normal;
 
         /// @brief The bounding box of the triangle in the global frame
-        /// @note The bounding box is a 2x2 array where the first row contains the minimum and maximum x-coordinates
-        /// and the second row contains the minimum and maximum y-coordinates
-        Eigen::Array22d m_bounding_box;
+        Box m_bounding_box;
 
         /// @brief A method to update the global points and normal vector based on the position and rotation of the triangle
         /// @note This method is called whenever the position or rotation of the triangle is changed

@@ -31,10 +31,13 @@ void Triangle::updatePoints() {
     m_global_normal = inv_rot * m_normal;
 
     // Update the bounding box of the triangle in the global frame
-    m_bounding_box(0, 0) = std::min({m_global_point0.x(), m_global_point1.x(), m_global_point2.x()});
-    m_bounding_box(0, 1) = std::max({m_global_point0.x(), m_global_point1.x(), m_global_point2.x()});
-    m_bounding_box(1, 0) = std::min({m_global_point0.y(), m_global_point1.y(), m_global_point2.y()});
-    m_bounding_box(1, 1) = std::max({m_global_point0.y(), m_global_point1.y(), m_global_point2.y()});
+    m_bounding_box.min << std::min({m_global_point0.x(), m_global_point1.x(), m_global_point2.x()}),
+                            std::min({m_global_point0.y(), m_global_point1.y(), m_global_point2.y()}),
+                            std::min({m_global_point0.z(), m_global_point1.z(), m_global_point2.z()});
+
+    m_bounding_box.max << std::max({m_global_point0.x(), m_global_point1.x(), m_global_point2.x()}),
+                            std::max({m_global_point0.y(), m_global_point1.y(), m_global_point2.y()}),
+                            std::max({m_global_point0.z(), m_global_point1.z(), m_global_point2.z()});
 }
 
 const Eigen::Vector3d& Triangle::getPoint(int i) const {
