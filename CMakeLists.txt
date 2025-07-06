@@ -36,7 +36,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Eigen)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra)
 
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    target_compile_options(${PROJECT_NAME} PUBLIC -g)
+    target_compile_options(${PROJECT_NAME} PUBLIC -g -O0)
 elseif (${CMAKE_BUILD_TYPE} STREQUAL "Release")
     target_compile_options(${PROJECT_NAME} PUBLIC -O3)
 else()
