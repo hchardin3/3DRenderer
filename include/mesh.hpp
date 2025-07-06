@@ -84,6 +84,6 @@ class Triangle : public SceneObject {
 
         /// @brief A method to get the global bounding box of the triangle
         /// @return The bounding box of the triangle in the global frame
-        const bool AABB_intersect(const Ray& ray) const;
+        bool AABB_intersect(const Ray& ray) const;
 };
 

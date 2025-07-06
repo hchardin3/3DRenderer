@@ -24,6 +24,6 @@ class LightSource : public SceneObject {
 
         /// @brief Get the intensity of the light source
         /// @return The intensity of the light source
-        const unsigned char getIntensity() const { return m_intensity; };
+        unsigned char getIntensity() const { return m_intensity; };
 
 };

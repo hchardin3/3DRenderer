@@ -12,7 +12,6 @@ void Exporter<ArrayType>::toBitmap(const std::string& filename) const
     const int HEIGHT = m_height;
 
     // Bitmap header fields
-    unsigned int headers[13];
     int extrabytes;
     int paddedsize;
 
@@ -97,9 +96,14 @@ void Exporter<ArrayType>::toBitmap(const std::string& filename) const
             green = m_image(linear_id, 1);
             blue = m_image(linear_id, 2);
 
-            if (red > 255) red = 255; if (red < 0) red = 0;
-            if (green > 255) green = 255; if (green < 0) green = 0;
-            if (blue > 255) blue = 255; if (blue < 0) blue = 0;
+            if (red > 255) red = 255; 
+            if (red < 0) red = 0;
+
+            if (green > 255) green = 255; 
+            if (green < 0) green = 0;
+
+            if (blue > 255) blue = 255; 
+            if (blue < 0) blue = 0;
 
             pixel[0] = static_cast<uint8_t>(blue);  // Blue channel
             pixel[1] = static_cast<uint8_t>(green); // Green channel

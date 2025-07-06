@@ -7,18 +7,17 @@
 
 class Camera : public SceneObject {
     private:
-        /// @brief The horizontal resolution (in number of pixels)
-        const int m_horizontalResolution;
-
-        /// @brief The vertical resolution (in number of pixels)
-        const int m_verticalResolution;
-        
-
         /// @brief The horizontal field of view (in radian)
         double m_horizontalFOV;
 
         /// @brief The vertical field of view (in radian)
         double m_verticalFOV;
+
+        /// @brief The horizontal resolution (in number of pixels)
+        const int m_horizontalResolution;
+
+        /// @brief The vertical resolution (in number of pixels)
+        const int m_verticalResolution;
 
         /// @brief The horizontal field of view in radians per pixel
         double m_horizontalRadPerPixel;
