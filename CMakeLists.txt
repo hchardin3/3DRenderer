@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 project(3DRenderer)
 
+# Chose the build type, which can be Debug or Release. This determines the optimization level and debug information included in the build.
+# If not specified, it defaults to Release.
+# This can be set in the command line with -DCMAKE_BUILD_TYPE=Debug or -DCMAKE_BUILD_TYPE=Release
+# or in the CMake GUI.
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
-
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 # Tell CMake where to find the source files for each third-party library (Need to contain a CMakeLists.txt)
 add_subdirectory(thirdParty/eigen3)
@@ -31,3 +31,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/in
 
 # Include third-party libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen)
+
+# Set the compiler options
+target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra)
+
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PUBLIC -g)
+elseif (${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    target_compile_options(${PROJECT_NAME} PUBLIC -O3)
+else()
+    message(FATAL_ERROR "Unknown build type: '${CMAKE_BUILD_TYPE}'. Use 'Debug' or 'Release'.")
+endif()
