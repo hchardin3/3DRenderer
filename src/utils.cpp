@@ -4,17 +4,16 @@
 // The intersect_triangle method is based on the algorithm described by BrunoLevy at:
 // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 //
-bool intersect_triangle(const Ray R, const Triangle triangle, float& u, float& v, float& t) {
+bool intersect_triangle(const Ray& R, const Triangle* triangle, float& u, float& v, float& t) {
     // AABB (Axis-Aligned Bounding Box) check
     // If the ray does not intersect the bounding box of the triangle, return false
-    if (!triangle.AABB_intersect(R)) {
+    if (!triangle->AABB_intersect(R)) {
         return false;
     }
-
-
-    const Eigen::Vector3d& A = triangle.getPoint(0);
-    const Eigen::Vector3d& B = triangle.getPoint(1);
-    const Eigen::Vector3d& C = triangle.getPoint(2);
+    
+    const Eigen::Vector3d& A = triangle->getPoint(0);
+    const Eigen::Vector3d& B = triangle->getPoint(1);
+    const Eigen::Vector3d& C = triangle->getPoint(2);
 
     Eigen::Vector3d E1 = B-A;
     Eigen::Vector3d E2 = C-A;
