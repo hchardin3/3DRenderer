@@ -44,7 +44,7 @@ Render Scene::getRender() const {
 
         if(intersect) {
             Eigen::Vector3d triangle_normal = hit_triangle->getNormal(); // Get the normal vector of the triangle
-            Eigen::Vector3d hit_position = ray.origin + ray.direction * t_opt; // Calculate the intersection point
+            Eigen::Vector3d hit_position = ray.getOrigin() + ray.getDirection() * t_opt; // Calculate the intersection point
             Eigen::Vector3d lightDirection = m_lightSource->getPosition() - hit_position;
             lightDirection.normalize(); // Normalize the light direction vector
 

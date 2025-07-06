@@ -19,10 +19,10 @@ bool intersect_triangle(const Ray R, const Triangle triangle, float& u, float& v
     Eigen::Vector3d E1 = B-A;
     Eigen::Vector3d E2 = C-A;
     Eigen::Vector3d N = E1.cross(E2);
-    float det = -R.direction.dot(N);
+    float det = -R.getDirection().dot(N);
     float invdet = 1.0/det;
-    Eigen::Vector3d AO  = R.origin - A;
-    Eigen::Vector3d DAO = AO.cross(R.direction);
+    Eigen::Vector3d AO  = R.getOrigin() - A;
+    Eigen::Vector3d DAO = AO.cross(R.getDirection());
 
     // Calculate the barycentric coordinates of the intersection (u, v, 1-u-v) 
     u =  E2.dot(DAO) * invdet;

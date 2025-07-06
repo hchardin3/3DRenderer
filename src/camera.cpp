@@ -55,8 +55,8 @@ void Camera::updatePixelPositions() {
 void Camera::updateRays() {
     for(int i(0); i<m_verticalResolution; ++i) {
         for(int j(0); j<m_horizontalResolution; ++j) {
-            m_rays[i * m_horizontalResolution + j].origin = m_position;
-            m_rays[i * m_horizontalResolution + j].direction = (getPositionPixel(i, j) - m_position).normalized();
+            m_rays[i * m_horizontalResolution + j].setOrigin(m_position);
+            m_rays[i * m_horizontalResolution + j].setDirection(getPositionPixel(i, j) - m_position);
         }
     }
 }
