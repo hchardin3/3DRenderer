@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(3DRenderer)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 # Tell CMake where to find the source files for each third-party library (Need to contain a CMakeLists.txt)
 add_subdirectory(thirdParty/eigen3)
 
