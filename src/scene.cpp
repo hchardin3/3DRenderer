@@ -4,9 +4,6 @@
 #include <chrono>
 using namespace std::chrono;
 
-Scene::Scene(Camera* camera) :
-    m_camera(camera) {}
-
 Render Scene::getRender() const {
     auto t0 = high_resolution_clock::now();
 

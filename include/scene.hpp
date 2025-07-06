@@ -1,12 +1,14 @@
 #pragma once
 
-#include "camera.hpp"
-#include "light.hpp"
-#include "mesh.hpp"
 #include <list>
 #include <tuple>
 #include <Eigen/Dense>
+
+#include "camera.hpp"
+#include "light.hpp"
+#include "mesh.hpp"
 #include "utils.hpp"
+#include "Structures/render.hpp"
 
 class Scene {
     private:
@@ -17,7 +19,7 @@ class Scene {
     public:
         /// @brief Create the whole scene that contains one camera and a few objects
         /// @param camera The camera to be used for rendering
-        Scene(Camera* camera);
+        Scene(Camera* camera) : m_camera(camera) {};
 
         /// @brief Set the light source of the scene
         /// @param lightSource The light source to be used for rendering

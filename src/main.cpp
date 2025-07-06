@@ -1,12 +1,13 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <math.h>
-#include "src/camera.hpp"
-#include "src/mesh.hpp"
-#include "src/scene.hpp"
-#include "src/utils.hpp"
-#include "src/exporter.hpp"
-#include "src/light.hpp"
+
+#include "camera.hpp"
+#include "mesh.hpp"
+#include "scene.hpp"
+#include "utils.hpp"
+#include "exporter.hpp"
+#include "light.hpp"
 
 #include <chrono>
 using namespace std::chrono;

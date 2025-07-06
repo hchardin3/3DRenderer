@@ -3,26 +3,7 @@
 #include <Eigen/Dense>
 #include <tuple>
 #include "mesh.hpp"
-
-struct Render
-{
-    typedef Eigen::Matrix<unsigned char, Eigen::Dynamic, 3> MatrixXchar;
-    MatrixXchar render;
-
-    const int verticalResolution, horizontalResolution;
-
-    /// @brief The image frame to be printed on the user's screen
-    /// @param verticalResolution 
-    /// @param horizontalResolution 
-    Render(int verticalResolution, int horizontalResolution);
-
-    Render(std::tuple<int, int> resolution);
-};
-
-struct Ray {
-    Eigen::Vector3d origin;
-    Eigen::Vector3d direction;
-};
+#include "Structures/ray.hpp"
 
 
 /// @brief Return true if the ray intersects the triangle
