@@ -88,7 +88,7 @@ class Octree {
             clear(); // Clear the octree to free memory
         };
 
-        void insert(const Eigen::Vector3d& position, const T* data);
+        void insert(const T* data, bool verbose = false);
 
         void remove(const Node& node);
 

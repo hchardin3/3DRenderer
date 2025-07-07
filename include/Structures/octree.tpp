@@ -43,8 +43,9 @@ inline void Octree<T>::addChildrenToNode(Node* node, const unsigned char ignore_
 }
 
 template <PositionType T>
-void Octree<T>::insert(const Eigen::Vector3d& position, const T* data) {
-    std::cout << "Inserting data at position: " << position.transpose() << std::endl;
+void Octree<T>::insert(const T* data, bool verbose) {
+    Eigen::Vector3d position = data->getPosition(); // Get the position of the data to be inserted
+    if (verbose) std::cout << "Inserting data at position: " << position.transpose() << std::endl;
 
     // If the position is outside the bounding box, expand the octree
     while (!m_root->getBoundingBox().contains(position) && m_root->total_children_depth < m_max_depth) {
@@ -69,7 +70,7 @@ void Octree<T>::insert(const Eigen::Vector3d& position, const T* data) {
         // Update the root to the new root
         m_root = new_root;
 
-        std::cout << "Expanded octree to new root at position: " << new_root_position.transpose() << " with size: " << m_root->size << " and bounding box: " << m_root->getBoundingBox().min.transpose() << ", " << m_root->getBoundingBox().max.transpose() << std::endl;
+        if (verbose) std::cout << "Expanded octree to new root at position: " << new_root_position.transpose() << " with size: " << m_root->size << " and bounding box: " << m_root->getBoundingBox().min.transpose() << ", " << m_root->getBoundingBox().max.transpose() << std::endl;
     }
 
     // Check if the position is within the bounding box of the root node
@@ -79,17 +80,20 @@ void Octree<T>::insert(const Eigen::Vector3d& position, const T* data) {
         return;
     }
 
-    std::cout << "Position is within the bounding box of the root node." << std::endl;
+    if (verbose) std::cout << "Position is within the bounding box of the root node." << std::endl;
 
     // If the position is within the bounding box, insert the data into the octree
     unsigned char branch_index = 0; // Value between 0 and 7 (111) representing the octant in which the position lies
     Node* current_node = m_root;
     while (current_node->depth <= m_max_depth) {
+        if (verbose) std::cout << "Current node position: " << current_node->position.transpose() << ", depth: " << current_node->depth << ", total children depth: " << current_node->total_children_depth << std::endl;
     // for (int current_depth = 0; current_depth < m_max_depth; ++current_depth) {
         // Check if the current node is a leaf node
         if (current_node->total_children_depth == 0) {
+            if (verbose) std::cout << "Current node is a leaf node." << std::endl;
             // If the current node is a leaf, check if it can accommodate the new data
             if (current_node->data.size() < m_max_neighbors) {
+                if (verbose) std::cout << "Current node has space for new data." << std::endl;
                 // If there is space, add the data to the current node
                 current_node->data.push_back(data);
                 break; // Data inserted successfully
@@ -97,10 +101,12 @@ void Octree<T>::insert(const Eigen::Vector3d& position, const T* data) {
             
             // If the leaf is full, check if we can subdivide it
             else if (current_node->depth < m_max_depth) {
+                if (verbose) std::cout << "Current node is full, subdividing..." << std::endl;
                 // If the current node is full, we need to subdivide it
                 // We will create child nodes and redistribute the existing data to the new children
                 Node* current_subdivision = current_node;
                 while(current_subdivision->data.size() >= m_max_neighbors && current_subdivision->depth < m_max_depth) {
+                    if (verbose) std::cout << "Subdividing node at position: " << current_subdivision->position.transpose() << ", depth: " << current_subdivision->depth << " and size: " << current_subdivision->size << std::endl;
                     // Create child nodes
                     addChildrenToNode(current_subdivision);
 
@@ -121,6 +127,7 @@ void Octree<T>::insert(const Eigen::Vector3d& position, const T* data) {
 
                 // Now we can insert the new data into the appropriate child node if it is not full
                 if (current_subdivision->data.size() < m_max_neighbors) {
+                    if (verbose) std::cout << "Inserting data into subdivided node at position: " << current_subdivision->position.transpose() << ", depth: " << current_subdivision->depth << " and size: " << current_subdivision->size << std::endl;
                     current_subdivision->data.push_back(data);
                     break; // Data inserted successfully
                 }
@@ -139,6 +146,7 @@ void Octree<T>::insert(const Eigen::Vector3d& position, const T* data) {
         }
         // If the current node is not a leaf, move to the appropriate child node
         else {
+            if (verbose) std::cout << "Current node is not a leaf, moving to child node." << std::endl;
             // Determine the branch index based on the position relative to the current node's position
             branch_index = getBranchIndex(position, current_node->position);
 
