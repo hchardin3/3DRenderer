@@ -9,17 +9,19 @@
 #include "mesh.hpp"
 #include "utils.hpp"
 #include "Structures/render.hpp"
+#include "Structures/octree.hpp"
 
 class Scene {
     private:
         Camera* m_camera;
         LightSource* m_lightSource;
         std::list<Triangle*> m_listOfObjects;
+        Octree<Triangle> m_octree; // Octree to manage the scene objects efficiently
     
     public:
         /// @brief Create the whole scene that contains one camera and a few objects
         /// @param camera The camera to be used for rendering
-        Scene(Camera* camera) : m_camera(camera) {};
+        Scene(Camera* camera) : m_camera(camera), m_octree(5, 2, 3, Eigen::Vector3d::Zero()) {};
 
         /// @brief Set the light source of the scene
         /// @param lightSource The light source to be used for rendering

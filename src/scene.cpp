@@ -84,4 +84,5 @@ Render Scene::getRender() const {
 
 void Scene::addTriangle(Triangle* triangle) {
     m_listOfObjects.push_front(triangle);
+    m_octree.insert(triangle->getPosition(), triangle); // Insert the triangle into the octree
 }

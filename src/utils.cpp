@@ -4,6 +4,8 @@
 // The intersect_triangle method is based on the algorithm described by BrunoLevy at:
 // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 //
+// Explanation of the algorithm:
+//      https://tavianator.com/2014/ray_triangle.html
 bool intersect_triangle(const Ray& R, const Triangle* triangle, float& u, float& v, float& t) {
     // AABB (Axis-Aligned Bounding Box) check
     // If the ray does not intersect the bounding box of the triangle, return false

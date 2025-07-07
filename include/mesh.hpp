@@ -7,31 +7,7 @@
 #include "Structures/ray.hpp"
 #include "Structures/box.hpp"
 
-class Triangle : public SceneObject {
-    private:
-        /// @brief The coordinates of the points of the triangle in the local frame
-        Eigen::Vector3d m_point0;
-        Eigen::Vector3d m_point1;
-        Eigen::Vector3d m_point2;
-
-        Eigen::Vector3d m_normal;
-
-
-        /// @brief The global coordinates of the points of the triangle
-        /// @note These points are the coordinates of the triangle in the global frame
-        Eigen::Vector3d m_global_point0;
-        Eigen::Vector3d m_global_point1;
-        Eigen::Vector3d m_global_point2;
-
-        Eigen::Vector3d m_global_normal;
-
-        /// @brief The bounding box of the triangle in the global frame
-        Box m_bounding_box;
-
-        /// @brief A method to update the global points and normal vector based on the position and rotation of the triangle
-        /// @note This method is called whenever the position or rotation of the triangle is changed
-        void updatePoints();
-    
+class Triangle : public SceneObject {    
     public:
         /// @brief A very simple triangular mesh
         /// @param point0 The coordinates of the first point of the mesh (3-dim vector in meters)
@@ -81,8 +57,36 @@ class Triangle : public SceneObject {
         /// @return The normal vector of the triangle in the global frame
         const Eigen::Vector3d& getNormal() const;
 
+        /// @brief A method to get the bounding box of the triangle
+        /// @return The bounding box of the triangle
+        inline const Box& getBoundingBox() const { return m_bounding_box; }
+
         /// @brief A method to get the global bounding box of the triangle
         /// @return The bounding box of the triangle in the global frame
         bool AABB_intersect(const Ray& ray) const;
+
+    private:
+        /// @brief The coordinates of the points of the triangle in the local frame
+        Eigen::Vector3d m_point0;
+        Eigen::Vector3d m_point1;
+        Eigen::Vector3d m_point2;
+
+        Eigen::Vector3d m_normal;
+
+
+        /// @brief The global coordinates of the points of the triangle
+        /// @note These points are the coordinates of the triangle in the global frame
+        Eigen::Vector3d m_global_point0;
+        Eigen::Vector3d m_global_point1;
+        Eigen::Vector3d m_global_point2;
+
+        Eigen::Vector3d m_global_normal;
+
+        /// @brief The bounding box of the triangle in the global frame
+        Box m_bounding_box;
+
+        /// @brief A method to update the global points and normal vector based on the position and rotation of the triangle
+        /// @note This method is called whenever the position or rotation of the triangle is changed
+        void updatePoints();
 };
 
