@@ -97,6 +97,10 @@ class Octree {
         void clear();
 
         void print() const;
+
+        inline const Node* getRoot() const {
+            return m_root; // Return the root node of the octree
+        };
         
     private:
         const unsigned int m_max_depth; // Maximum level of the octree
