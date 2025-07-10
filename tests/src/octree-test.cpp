@@ -114,3 +114,67 @@ TEST_CASE("[Octree] testing octree insertion") {
     }
 }
 
+TEST_CASE("[Octree] testing ray tracing collision") {
+    unsigned int max_depth = 5; // Maximum depth of the octree
+    double initial_size = 2.0; // Initial size of the octree's root node (length of one side of the cube)
+    unsigned int max_neighbors = 3; // Maximum number of neighbors in each octree leaf
+    const Eigen::Vector3d& root_postion = Eigen::Vector3d::Zero(); // Position of the root node in 3D space
+
+    Octree<MockTriangle> octree(max_depth, initial_size, max_neighbors, root_postion);
+
+    MockTriangle triangle1(Eigen::Vector3d(1.0, 1.0, 1.0));
+    MockTriangle triangle2(Eigen::Vector3d(0.5, 0.5, 0.5));
+    MockTriangle triangle3(Eigen::Vector3d(0.2, -0.8, -0.3));
+    MockTriangle triangle4(Eigen::Vector3d(2.5, 2.5, 2.5));
+
+    octree.insert(&triangle1);
+    octree.insert(&triangle2);
+    octree.insert(&triangle3);
+    octree.insert(&triangle4);
+
+    SUBCASE("Trace ray through existing triangles") {
+        Eigen::Vector3d origin(0.0, 0.0, 0.0);
+        Eigen::Vector3d direction(1.0, 1.0, 1.0);
+        double max_distance = 10.0;
+
+        direction.normalize(); // Normalize the direction vector
+
+        MockTriangle* hit_triangle = octree.traceRay(origin, direction, max_distance);
+        CHECK(hit_triangle != nullptr);
+        CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
+    }
+
+    SUBCASE("Trace ray that does not hit any triangles") {
+        Eigen::Vector3d origin(10.0, 10.0, 10.0);
+        Eigen::Vector3d direction(-1.0, -1.0, -1.0);
+        double max_distance = 10.0;
+
+        direction.normalize(); // Normalize the direction vector
+
+        MockTriangle* hit_triangle = octree.traceRay(origin, direction, max_distance);
+        CHECK(hit_triangle == nullptr);
+    }
+
+    SUBCASE("Trace ray that hits multiple triangles") {
+        Eigen::Vector3d origin(0.0, 0.0, 0.0);
+        Eigen::Vector3d direction(1.0, 1.0, 1.0);
+        double max_distance = 10.0;
+
+        direction.normalize(); // Normalize the direction vector
+
+        MockTriangle* hit_triangle = octree.traceRay(origin, direction, max_distance);
+        CHECK(hit_triangle != nullptr);
+        CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
+    }
+
+    SUBCASE("Trace ray too short to hit any triangles") {
+        Eigen::Vector3d origin(0.0, 0.0, 0.0);
+        Eigen::Vector3d direction(1.0, 1.0, 1.0);
+        double max_distance = 0.5; // Too short to hit any triangle
+
+        direction.normalize(); // Normalize the direction vector
+
+        MockTriangle* hit_triangle = octree.traceRay(origin, direction, max_distance);
+        CHECK(hit_triangle == nullptr);
+    }
+}

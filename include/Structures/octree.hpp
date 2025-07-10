@@ -94,6 +94,8 @@ class Octree {
 
         const std::list<const T*> getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const;
 
+        T* traceRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& direction, double max_distance) const;
+
         void clear();
 
         void print() const;

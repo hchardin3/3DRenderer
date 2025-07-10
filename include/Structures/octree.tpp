@@ -13,7 +13,7 @@ Octree<T>::Octree(unsigned int max_depth, double initial_size, unsigned int max_
     m_root = new Node(root_postion, initial_size, 0, 0);
 }
 
-/// @brief Get the branch index based on the position relative to the node's position
+/// @brief Get the branch index corresponding to the closest octant from the node to the given position
 /// @param position The position to check
 /// @param node_position The position of the node
 /// @return A value between 0 and 7 (111) representing the octant in which the position lies
@@ -172,6 +172,26 @@ const std::list<const T*> Octree<T>::getNeighbors(const Eigen::Vector3d& positio
     std::list<const T*> neighbors;
     // Logic to find neighbors within the bounding box
     return neighbors;
+}
+
+/// @brief Uses Sorted Sibling Traversal to trace a ray through the octree and detect the first object hit by the ray.
+/// Inspired from https://bertolami.com/files/octrees.pdf
+/// @param origin Origin of the ray in world coordinates
+/// @param direction Direction of the ray in world coordinates
+/// @param max_distance Maximum distance to trace the ray
+/// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
+template <PositionType T>
+T* Octree<T>::traceRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& direction, double max_distance) const {
+    // Ray tracing logic for the octree
+    // This function should return a pointer to the first object hit by the ray, or nullptr if no object is hit
+
+    if (!m_root) {
+        return nullptr; // If the octree is empty, return nullptr
+    }
+
+
+
+    return nullptr; // No object hit by the ray
 }
 
 template <PositionType T>
