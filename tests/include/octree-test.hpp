@@ -13,4 +13,11 @@ class MockTriangle {
         Eigen::Vector3d getPosition() const {
             return position;
         }
+
+        bool intersect(const Ray& ray, float& u, float& v, float& t) const {
+            // Mock intersection logic
+            // For testing purposes, we can assume it always intersects
+            u = 0.5f; v = 0.5f; t = 1.0f;
+            return true;
+        }
 };
