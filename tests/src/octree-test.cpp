@@ -18,12 +18,12 @@ TEST_CASE("[Octree] testing octree insertion") {
         CHECK(root->data.front() == &triangle);
         CHECK(root->depth == 0);
 
-        std::cout << std::endl;
-        std::cout << "Octree root position: " << root->position.transpose() << std::endl;
-        std::cout << "Octree root size: " << root->size << std::endl;
-        std::cout << "Octree root depth: " << root->depth << std::endl;
-        std::cout << "Octree total children depth: " << root->total_children_depth << std::endl;
-        std::cout << std::endl;
+        // std::cout << std::endl;
+        // std::cout << "Octree root position: " << root->position.transpose() << std::endl;
+        // std::cout << "Octree root size: " << root->size << std::endl;
+        // std::cout << "Octree root depth: " << root->depth << std::endl;
+        // std::cout << "Octree total children depth: " << root->total_children_depth << std::endl;
+        // std::cout << std::endl;
 
         SUBCASE("Insert 3 triangles into the octree, within bounds") {
             MockTriangle triangle2(Eigen::Vector3d(1, 1, 1));
@@ -39,7 +39,7 @@ TEST_CASE("[Octree] testing octree insertion") {
             // std::cout << "After inserting multiple triangles:" << std::endl;
             // octree.print();
 
-            SUBCASE("Insert one more triangle, exceeding max neighbors") {
+            SUBCASE("Insert one more triangle within bounds, exceeding max neighbors") {
                 MockTriangle triangle4(Eigen::Vector3d(0.2, -0.8, -0.3));
                 octree.insert(&triangle4);
 
@@ -47,6 +47,8 @@ TEST_CASE("[Octree] testing octree insertion") {
                 CHECK(root->total_children_depth > 0);
                 CHECK(root->depth == 0);
                 CHECK(root->data.size() == 0);
+
+                // Check that the root node has children
                 int total_data = 0;
                 for (int i = 0; i < 8; ++i) {
                     CHECK(root->children[i] != nullptr);
@@ -71,6 +73,44 @@ TEST_CASE("[Octree] testing octree insertion") {
                 CHECK(found[2] == true);
                 CHECK(found[3] == true);
             }
+
+            SUBCASE("Insert one more triangle outside the bounding box") {
+                MockTriangle triangle5(Eigen::Vector3d(2.5, 2.5, 2.5));
+                octree.insert(&triangle5);
+
+                root = octree.getRoot(); // Get the updated root after insertion
+
+                // Check that the root node is not a leaf anymore
+                CHECK(root->total_children_depth == 1);
+                CHECK(root->depth == 0);
+                CHECK(root->data.size() == 0);
+
+                // Check that the root node has children
+                int total_data = 0;
+                for (int i = 0; i < 8; ++i) {
+                    CHECK(root->children[i] != nullptr);
+                    CHECK(root->children[i]->depth == 1);
+                    CHECK(root->children[i]->total_children_depth == 0);
+                    CHECK(root->children[i]->data.size() <= max_neighbors);
+                    total_data += root->children[i]->data.size();
+                }
+                CHECK(total_data == 4); // We inserted 4 triangles, so total data in children should be 4
+
+                bool found[4] = {false, false, false, false};
+                for (int i = 0; i < 8; ++i) {
+                    for (const auto& data : root->children[i]->data) {
+                        if (data == &triangle) found[0] = true;
+                        else if (data == &triangle2) found[1] = true;
+                        else if (data == &triangle3) found[2] = true;
+                        else if (data == &triangle5) found[3] = true;
+                    }
+                }
+                CHECK(found[0] == true);
+                CHECK(found[1] == true);
+                CHECK(found[2] == true);
+                CHECK(found[3] == true);
+            }
         }
     }
 }
+
