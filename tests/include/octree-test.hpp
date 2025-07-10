@@ -2,6 +2,7 @@
 #include <doctest/doctest.h>
 
 #include "Structures/octree.hpp"
+#include "triangle.hpp"
 
 class MockTriangle {
     public:
