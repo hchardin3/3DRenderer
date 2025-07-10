@@ -70,10 +70,6 @@ class Triangle : public SceneObject {
         /// @return The bounding box of the triangle
         inline const Box& getBoundingBox() const { return m_bounding_box; }
 
-        /// @brief A method to get the global bounding box of the triangle
-        /// @return The bounding box of the triangle in the global frame
-        bool AABBIntersect(const Ray& ray) const;
-
         /// @brief Return true if the ray intersects the triangle
         /// @param R The Ray to test for intersection
         /// @param u The barycentric coordinate u of the intersection point (IP): IP = A + u * E1 + v * E2

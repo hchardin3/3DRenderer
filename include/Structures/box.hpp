@@ -1,7 +1,10 @@
 #pragma once
 
 #include <Eigen/Dense>
+#include "Structures/ray.hpp"
 
+// @brief A structure representing an Axis-Aligned Bounding Box (AABB) in 3D space.
+// @details This structure is used to represent a 3D box defined by its minimum and maximum points in 3D space.
 struct Box
 {
     /// @brief The minimum points of the box
@@ -22,4 +25,8 @@ struct Box
     bool contains(const Box& other) const {
         return (other.min >= min && other.max <= max).all();
     };
+
+    /// @brief A method to check if a ray intersects with this box
+    /// @param ray The ray to check for intersection
+    bool intersect(const Ray& ray) const;
 };
