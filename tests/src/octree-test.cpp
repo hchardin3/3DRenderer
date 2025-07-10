@@ -112,6 +112,30 @@ TEST_CASE("[Octree] testing octree insertion") {
             }
         }
     }
+
+    SUBCASE("Insert too many triangles at the same position") {
+        MockTriangle triangle(Eigen::Vector3d(1.0, 1.0, 1.0));
+        octree.insert(&triangle);
+        const OctreeNode<MockTriangle>* root = octree.getRoot();
+        CHECK(root != nullptr);
+        CHECK(root->getBoundingBox().contains(triangle.getPosition()));
+        CHECK(root->data.size() == 1);
+        CHECK(root->data.front() == &triangle);
+
+        // Insert more triangles at the same position
+        MockTriangle triangle2(Eigen::Vector3d(1.0, 1.0, 1.0));
+        MockTriangle triangle3(Eigen::Vector3d(1.0, 1.0, 1.0));
+        octree.insert(&triangle2);
+        octree.insert(&triangle3);
+
+        CHECK(root->data.size() == 3);
+        CHECK(root->data.front() == &triangle);
+        CHECK(root->data.back() == &triangle3);
+
+        // Check that an error is thrown when trying to insert more than max_neighbors triangles at the same position
+        MockTriangle triangle4(Eigen::Vector3d(1.0, 1.0, 1.0));
+        CHECK_THROWS_AS(octree.insert(&triangle4), std::length_error);
+    }
 }
 
 TEST_CASE("[Octree] testing ray tracing collision") {
