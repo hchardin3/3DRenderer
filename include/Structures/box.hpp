@@ -28,5 +28,7 @@ struct Box
 
     /// @brief A method to check if a ray intersects with this box
     /// @param ray The ray to check for intersection
-    bool intersect(const Ray& ray) const;
+    /// @param t The distance from the ray origin to the intersection point, only valid if the ray intersects the box
+    /// @return true if the ray intersects the box, false otherwise
+    bool intersect(const Ray& ray, double& t) const;
 };

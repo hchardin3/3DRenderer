@@ -66,7 +66,8 @@ const Eigen::Vector3d& Triangle::getNormal() const {
 bool Triangle::intersectRay(const Ray& R, float& u, float& v, float& t) const {
     // AABB (Axis-Aligned Bounding Box) check
     // If the ray does not intersect the bounding box of the triangle, return false
-    if (!m_bounding_box.intersect(R)) {
+    double box_t;
+    if (!m_bounding_box.intersect(R, box_t)) {
         return false;
     }
     
