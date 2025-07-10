@@ -5,7 +5,6 @@
 #include "camera.hpp"
 #include "mesh.hpp"
 #include "scene.hpp"
-#include "utils.hpp"
 #include "exporter.hpp"
 #include "light.hpp"
 

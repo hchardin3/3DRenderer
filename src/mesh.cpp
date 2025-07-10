@@ -62,7 +62,7 @@ const Eigen::Vector3d& Triangle::getNormal() const {
 //      https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
 // See for explanation:
 //      https://tavianator.com/2011/ray_box.html
-bool Triangle::AABB_intersect(const Ray& ray) const{
+bool Triangle::AABBIntersect(const Ray& ray) const{
     const Eigen::Vector3d& origin = ray.getOrigin();
     const Eigen::Vector3d& inv_dir = ray.getInverseDirection();
 
@@ -95,4 +95,38 @@ bool Triangle::AABB_intersect(const Ray& ray) const{
     // tmax = std::min(tmax, std::max(t1, t2));
 
     return tmax >= tmin;
+}
+
+// The interesectRay method is based on the algorithm described by BrunoLevy at:
+// https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
+//
+// Explanation of the algorithm:
+//      https://tavianator.com/2014/ray_triangle.html
+bool Triangle::intersectRay(const Ray& R, float& u, float& v, float& t) const {
+    // AABB (Axis-Aligned Bounding Box) check
+    // If the ray does not intersect the bounding box of the triangle, return false
+    if (!AABBIntersect(R)) {
+        return false;
+    }
+    
+    const Eigen::Vector3d& A = getPoint(0);
+    const Eigen::Vector3d& B = getPoint(1);
+    const Eigen::Vector3d& C = getPoint(2);
+
+    Eigen::Vector3d E1 = B-A;
+    Eigen::Vector3d E2 = C-A;
+    Eigen::Vector3d N = E1.cross(E2);
+    float det = -R.getDirection().dot(N);
+    float invdet = 1.0/det;
+    Eigen::Vector3d AO  = R.getOrigin() - A;
+    Eigen::Vector3d DAO = AO.cross(R.getDirection());
+
+    // Calculate the barycentric coordinates of the intersection (u, v, 1-u-v) 
+    u =  E2.dot(DAO) * invdet;
+    v = -E1.dot(DAO) * invdet;
+
+    // Calculate the distance from the ray origin to the intersection point
+    t = AO.dot(N) * invdet;
+
+    return (std::fabs(det) >= 1e-6 && t >= 0 && u >= 0 && v >= 0 && (u+v) <= 1);
 }

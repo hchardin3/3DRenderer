@@ -63,7 +63,15 @@ class Triangle : public SceneObject {
 
         /// @brief A method to get the global bounding box of the triangle
         /// @return The bounding box of the triangle in the global frame
-        bool AABB_intersect(const Ray& ray) const;
+        bool AABBIntersect(const Ray& ray) const;
+
+        /// @brief Return true if the ray intersects the triangle
+        /// @param R The Ray to test for intersection
+        /// @param u The barycentric coordinate u of the intersection point (IP): IP = A + u * E1 + v * E2
+        /// @param v The barycentric coordinate v of the intersection point (IP): IP = A + u * E1 + v * E2
+        /// @param t The distance from the ray origin to the intersection point (IP): IP = R.Origin + t * R.Dir
+        /// @return true if the Ray intersect the object, false otherwise
+        bool intersectRay(const Ray& R, float& u, float& v, float& t) const;
 
     private:
         /// @brief The coordinates of the points of the triangle in the local frame

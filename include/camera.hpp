@@ -2,8 +2,8 @@
 
 #include <Eigen/Dense>
 #include <tuple>
-#include "utils.hpp"
 #include "sceneObject.hpp"
+#include "Structures/ray.hpp"
 
 class Camera : public SceneObject {
     private:
