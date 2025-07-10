@@ -32,7 +32,7 @@ Render Scene::getRender() const {
         float t_opt; // Initialize t_opt to a small value
         const Triangle* hit_triangle = nullptr;
         for (const Triangle* triangle : m_listOfObjects) {
-            if(triangle->intersectRay(ray, u, v, t)) {
+            if(triangle->intersect(ray, u, v, t)) {
                 if (!intersect || t < t_opt) {
                     t_opt = t; // Update the closest intersection distance
                     intersect = true;

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 Octree<T>::Octree(unsigned int max_depth, double initial_size, unsigned int max_neighbors, const Eigen::Vector3d& root_postion) : 
         m_max_depth(max_depth),
         m_max_neighbors(max_neighbors)
@@ -27,7 +27,7 @@ inline unsigned char getBranchIndex(const Eigen::Vector3d& position, const Eigen
     return branch_index;
 }
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 inline void Octree<T>::addChildrenToNode(Node* node, const unsigned char ignore_index) {
     // Create child nodes for the current node
     double new_half_size = node->getHalfSize() / 2;
@@ -42,7 +42,7 @@ inline void Octree<T>::addChildrenToNode(Node* node, const unsigned char ignore_
     }
 }
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 void Octree<T>::insert(const T* data, bool verbose) {
     Eigen::Vector3d position = data->getPosition(); // Get the position of the data to be inserted
     if (verbose) std::cout << "Inserting data at position: " << position.transpose() << std::endl;
@@ -162,12 +162,12 @@ void Octree<T>::insert(const T* data, bool verbose) {
     }
 }
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 void Octree<T>::remove(const Node& node) {
     // Remove logic for the octree node
 }
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 const std::list<const T*> Octree<T>::getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const {
     std::list<const T*> neighbors;
     // Logic to find neighbors within the bounding box
@@ -180,21 +180,17 @@ const std::list<const T*> Octree<T>::getNeighbors(const Eigen::Vector3d& positio
 /// @param direction Direction of the ray in world coordinates
 /// @param max_distance Maximum distance to trace the ray
 /// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
-template <PositionType T>
-T* Octree<T>::traceRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& direction, double max_distance) const {
+template <OctreeAcceptatble T>
+T* Octree<T>::traceRay(const Ray& ray, double max_distance) const {
     // Ray tracing logic for the octree
     // This function should return a pointer to the first object hit by the ray, or nullptr if no object is hit
 
-    if (!m_root) {
-        return nullptr; // If the octree is empty, return nullptr
-    }
-
-
+ 
 
     return nullptr; // No object hit by the ray
 }
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 void Octree<T>::clear() {
     // Clear the octree
     if (m_root) {
@@ -203,7 +199,7 @@ void Octree<T>::clear() {
     }
 }
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 void Octree<T>::print() const {
     // Print the octree structure
 }

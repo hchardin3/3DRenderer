@@ -6,14 +6,16 @@
 
 #include "Structures/box.hpp"
 
-// Concept HasMyFunc: type 'T' has `.myFunc` and
-// its return is convertible to int.
+// Concept OctreeAcceptatble: type 'T' has 
+//  `.getPosition` and its return is convertible to Vector3d.
+//  `.intersect` and its return is convertible to bool.
 template<typename T>
-concept PositionType = requires(T a) {
+concept OctreeAcceptatble = requires(T a, Ray& ray, float& u, float& v, float& t) {
     { a.getPosition() } -> std::convertible_to<Eigen::Vector3d>;
+    { a.intersect(ray, u, v, t) } -> std::convertible_to<bool>;
 };
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 class OctreeNode {
     public:
         Eigen::Vector3d position; // Coordinates of the node
@@ -70,7 +72,7 @@ class OctreeNode {
         double m_half_size; // Half the size of the node, used for bounding box calculations
 };
 
-template <PositionType T>
+template <OctreeAcceptatble T>
 class Octree {
     typedef OctreeNode<T> Node;
 
@@ -94,7 +96,7 @@ class Octree {
 
         const std::list<const T*> getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const;
 
-        T* traceRay(const Eigen::Vector3d& origin, const Eigen::Vector3d& direction, double max_distance) const;
+        T* traceRay(const Ray& ray, double max_distance) const;
 
         void clear();
 
