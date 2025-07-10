@@ -6,7 +6,7 @@
 
 #include "camera.hpp"
 #include "light.hpp"
-#include "mesh.hpp"
+#include "triangle.hpp"
 #include "Structures/ray.hpp"
 #include "Structures/render.hpp"
 #include "Structures/octree.hpp"

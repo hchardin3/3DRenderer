@@ -1,4 +1,4 @@
-#include "mesh.hpp"
+#include "triangle.hpp"
 
 Triangle::Triangle(Eigen::Vector3d position, Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector3d point2, bool invert) :
         SceneObject(position, Eigen::Vector3d::UnitY(), Eigen::Vector3d::UnitZ()),

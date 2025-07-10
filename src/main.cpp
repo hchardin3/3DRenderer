@@ -3,7 +3,7 @@
 #include <math.h>
 
 #include "camera.hpp"
-#include "mesh.hpp"
+#include "triangle.hpp"
 #include "scene.hpp"
 #include "exporter.hpp"
 #include "light.hpp"
