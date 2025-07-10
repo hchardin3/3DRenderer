@@ -16,6 +16,15 @@ class Triangle : public SceneObject {
         /// @param invert Wether the normal vector should be built in the direct cross-product direction
         Triangle(Eigen::Vector3d position, Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector3d point2, bool invert = false);
 
+        /// @brief Build a triangle from three points in the global frame and infer the position of the triangle by baricentric coordinates
+        /// @note The position of the triangle is set to the barycenter of the three points
+        /// @param point0 The coordinates of the first point of the mesh in global frame (3-dim vector in meters)
+        /// @param point1 The coordinates of the second point of the mesh in global frame (3-dim vector in meters)
+        /// @param point2 The coordinates of the third point of the mesh in global frame (3-dim vector in meters)
+        /// @param invert Wether the normal vector should be built in the direct cross-product direction
+        Triangle(Eigen::Vector3d point0, Eigen::Vector3d point1, Eigen::Vector3d point2, bool invert = false)
+            : Triangle((point0 + point1 + point2) / 3.0, point0, point1, point2, invert) {};
+
 
         /// @brief  A method to set the position of the camera in the global frame
         /// @param position The new position of the camera in the global frame
