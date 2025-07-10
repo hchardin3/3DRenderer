@@ -139,10 +139,10 @@ TEST_CASE("[Octree] testing ray tracing collision") {
     Eigen::Vector3d p3(0.0, 0.0, 1.0);
     Eigen::Vector3d p4(1.0, 1.0, 1.0);
 
-    Triangle triangle1(Eigen::Vector3d(0.0, 0.0, 0.0), p1, p2, p3);
-    Triangle triangle2(Eigen::Vector3d(0.0, 0.0, 0.0), p1, p2, p4);
-    Triangle triangle3(Eigen::Vector3d(0.0, 0.0, 0.0), p1, p3, p4);
-    Triangle triangle4(Eigen::Vector3d(0.0, 0.0, 0.0), p2, p3, p4);
+    Triangle triangle1(p1, p2, p3);
+    Triangle triangle2(p1, p2, p4);
+    Triangle triangle3(p1, p3, p4);
+    Triangle triangle4(p2, p3, p4);
 
     octree.insert(&triangle1);
     octree.insert(&triangle2);
