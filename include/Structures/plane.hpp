@@ -1,0 +1,52 @@
+#pragma once
+
+#include <Eigen/Dense>
+#include "Structures/ray.hpp"
+
+struct Plane {
+    /// @brief The normal vector of the plane
+    Eigen::Vector3d normal;
+
+    /// @brief A point on the plane
+    Eigen::Vector3d point;
+
+    /// @brief Constructor for the Plane class
+    /// @param normal The normal vector of the plane (3-dim vector)
+    /// @param point A point on the plane (3-dim vector)
+    /// @note The normal vector is normalized in the constructor
+    Plane(const Eigen::Vector3d& normal, const Eigen::Vector3d& point)
+        : normal(normal.normalized()), point(point), m_point_dot_normal(point.dot(normal)) {
+            // Ensure that the normal vector is non zero
+            if (normal.norm() < std::numeric_limits<double>::epsilon()) {
+                throw std::invalid_argument("Normal vector cannot be zero.");
+            }
+        }
+
+    /// @brief A method to check if a ray intersects with the plane
+    /// @param ray The ray to check for intersection
+    /// @param t The distance from the ray origin to the intersection point, only valid if the ray intersects the plane
+    /// @return true if the ray intersects the plane, false otherwise
+    bool intersect(const Ray& ray, double& t) const {
+        double denominator = normal.dot(ray.getDirection());
+
+        // If the denominator is zero, the ray is parallel to the plane
+        if (std::fabs(denominator) < std::numeric_limits<double>::epsilon()) {
+            return false;
+        }
+
+        // Calculate the distance from the ray origin to the intersection point
+        t = (m_point_dot_normal - ray.getOrigin().dot(normal)) / denominator;
+
+        // Check if the intersection point is in front of the ray origin
+        return t >= 0;
+    }
+
+    /// @brief Get the dot product of the point on the plane and the normal vector
+    /// @return The dot product of the point on the plane and the normal vector
+    double getPointDotNormal() const {
+        return m_point_dot_normal;
+    }
+
+    private:
+        double m_point_dot_normal;
+};
