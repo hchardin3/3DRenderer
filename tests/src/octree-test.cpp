@@ -142,116 +142,126 @@ TEST_CASE("[Octree] testing ray tracing collision") {
     unsigned int max_depth = 5; // Maximum depth of the octree
     double initial_size = 2.0; // Initial size of the octree's root node (length of one side of the cube)
     unsigned int max_neighbors = 3; // Maximum number of neighbors in each octree leaf
-    const Eigen::Vector3d& root_postion = Eigen::Vector3d::Zero(); // Position of the root node in 3D space
 
-    Octree<Triangle> octree(max_depth, initial_size, max_neighbors, root_postion);
+    // Position of the root node in 3D space
+    const Eigen::Vector3d root_postions[3] = {
+        Eigen::Vector3d::Zero(),
+        Eigen::Vector3d(1.0, 1.0, 1.0),
+        Eigen::Vector3d(-1.0, 10, 0.0)
+    };
 
-    SUBCASE("Trace ray through empty octree") {
-        Eigen::Vector3d origin(0.0, 0.0, 0.0);
-        Eigen::Vector3d direction(1.0, 1.0, 1.0);
-        Ray ray(origin, direction);
-        double max_distance = 10.0;
+    for (unsigned int root_pos_index = 0; root_pos_index < 3; root_pos_index++) {
+        const Eigen::Vector3d& root_postion = root_postions[root_pos_index]; // Position of the root node in 3D space
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle == nullptr);
-    }
+        Octree<Triangle> octree(max_depth, initial_size, max_neighbors, root_postion);
 
-    // Create some triangles to insert into the octree
-    Eigen::Vector3d p1(1.0, 0.0, 0.0);
-    Eigen::Vector3d p2(0.0, 1.0, 0.0);
-    Eigen::Vector3d p3(0.0, 0.0, 1.0);
-    Eigen::Vector3d p4(1.0, 1.0, 1.0);
+        SUBCASE("Trace ray through empty octree") {
+            Eigen::Vector3d origin(0.0, 0.0, 0.0);
+            Eigen::Vector3d direction(1.0, 1.0, 1.0);
+            Ray ray(origin, direction);
+            double max_distance = 10.0;
 
-    Triangle triangle1(p1, p2, p3);
-    Triangle triangle2(p1, p2, p4);
-    Triangle triangle3(p1, p3, p4);
-    Triangle triangle4(p2, p3, p4);
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle == nullptr);
+        }
 
-    octree.insert(&triangle1);
-    octree.insert(&triangle2);
-    octree.insert(&triangle3);
+        // Create some triangles to insert into the octree
+        Eigen::Vector3d p1(1.0, 0.0, 0.0);
+        Eigen::Vector3d p2(0.0, 1.0, 0.0);
+        Eigen::Vector3d p3(0.0, 0.0, 1.0);
+        Eigen::Vector3d p4(1.0, 1.0, 1.0);
 
-    SUBCASE("Trace ray from inside octree") {
-        Eigen::Vector3d origin(0.5, 0.5, 0.5);
-        Eigen::Vector3d direction(1.0, 1.0, 1.0);
-        Ray ray(origin, direction);
-        double max_distance = 10.0;
+        Triangle triangle1(p1, p2, p3);
+        Triangle triangle2(p1, p2, p4);
+        Triangle triangle3(p1, p3, p4);
+        Triangle triangle4(p2, p3, p4);
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle != nullptr);
-        CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
-    }
+        octree.insert(&triangle1);
+        octree.insert(&triangle2);
+        octree.insert(&triangle3);
 
-    SUBCASE("Trace ray that does not hit any triangles because it is outside the bounding box") {
-        Eigen::Vector3d origin(10.0, 10.0, 10.0);
-        Eigen::Vector3d direction(-1.0, -1.0, -1.0);
-        Ray ray(origin, direction);
-        double max_distance = 10.0;
+        SUBCASE("Trace ray from inside octree") {
+            Eigen::Vector3d origin(0.5, 0.5, 0.5);
+            Eigen::Vector3d direction(1.0, 1.0, 1.0);
+            Ray ray(origin, direction);
+            double max_distance = 10.0;
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle == nullptr);
-    }
-    
-    Eigen::Vector3d origin(-3, -3, -3); // Origin outside the bounding box of the octree
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle != nullptr);
+            CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
+        }
 
-    SUBCASE("Trace ray that does not hit any triangles because of its direction") {
-        Eigen::Vector3d direction(1.0, -1.0, 1.0);
-        Ray ray(origin, direction);
-        double max_distance = 10.0;
+        SUBCASE("Trace ray that does not hit any triangles because it is outside the bounding box") {
+            Eigen::Vector3d origin(10.0, 10.0, 10.0);
+            Eigen::Vector3d direction(-1.0, -1.0, -1.0);
+            Ray ray(origin, direction);
+            double max_distance = 10.0;
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle == nullptr);
-    }
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle == nullptr);
+        }
+        
+        Eigen::Vector3d origin(-3, -3, -3); // Origin outside the bounding box of the octree
 
-    SUBCASE("Trace ray through existing triangle") {
-        Eigen::Vector3d direction(1.0, 1.0, 1.0);
-        Ray ray(origin, direction);
-        double max_distance = 10.0;
+        SUBCASE("Trace ray that does not hit any triangles because of its direction") {
+            Eigen::Vector3d direction(1.0, -1.0, 1.0);
+            Ray ray(origin, direction);
+            double max_distance = 10.0;
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle != nullptr);
-        CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
-    }
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle == nullptr);
+        }
 
-    octree.insert(&triangle4);
+        SUBCASE("Trace ray through existing triangle") {
+            Eigen::Vector3d direction(1.0, 1.0, 1.0);
+            Ray ray(origin, direction);
+            double max_distance = 10.0;
 
-    SUBCASE("Trace ray that hits multiple triangles") {
-        Eigen::Vector3d direction(1.0, 1.0, 1.0);
-        Ray ray(origin, direction);
-        double max_distance = 10.0;
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle != nullptr);
+            CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
+        }
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle != nullptr);
-        CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
-    }
+        octree.insert(&triangle4);
 
-    SUBCASE("Trace ray too short to hit any triangles") {
-        Eigen::Vector3d direction(1.0, 1.0, 1.0);
-        Ray ray(origin, direction);
-        double max_distance = 0.5; // Too short to hit any triangle
+        SUBCASE("Trace ray that hits multiple triangles") {
+            Eigen::Vector3d direction(1.0, 1.0, 1.0);
+            Ray ray(origin, direction);
+            double max_distance = 10.0;
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle == nullptr);
-    }
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle != nullptr);
+            CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
+        }
 
-    Eigen::Vector3d pp1(1.0, 0.0, 0.0);
-    Eigen::Vector3d pp2(-1.0, 0.0, 0.0);
-    Eigen::Vector3d pp3(0.0, 0.0, 1.0);
+        SUBCASE("Trace ray too short to hit any triangles") {
+            Eigen::Vector3d direction(1.0, 1.0, 1.0);
+            Ray ray(origin, direction);
+            double max_distance = 0.5; // Too short to hit any triangle
 
-    Triangle triangle11(pp1, pp2, pp3);
-    triangle11.translate(Eigen::Vector3d(0.0, 30, -0.5)); // Move triangle1 outside the bounding box
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle == nullptr);
+        }
 
-    octree.insert(&triangle11);
+        Eigen::Vector3d pp1(1.0, 0.0, 0.0);
+        Eigen::Vector3d pp2(-1.0, 0.0, 0.0);
+        Eigen::Vector3d pp3(0.0, 0.0, 1.0);
 
-    SUBCASE("Trace ray that hits a triangle multiple nodes away") {
-        Eigen::Vector3d origin(0.0, 3.0, 0.0); // Start outside the bounding box
-        Eigen::Vector3d direction(0.0, 1.0, 0.0); // Direction towards the triangles
-        Ray ray(origin, direction);
-        double max_distance = 30.0;
+        Triangle triangle11(pp1, pp2, pp3);
+        triangle11.translate(Eigen::Vector3d(0.0, 30, -0.5)); // Move triangle1 outside the bounding box
 
-        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
-        CHECK(hit_triangle != nullptr);
-        CHECK(hit_triangle == &triangle11);
-        CHECK(hit_triangle->getPosition().isApprox(triangle11.getPosition()));
+        octree.insert(&triangle11);
+
+        SUBCASE("Trace ray that hits a triangle multiple nodes away") {
+            Eigen::Vector3d origin(0.0, 3.0, 0.0); // Start outside the bounding box
+            Eigen::Vector3d direction(0.0, 1.0, 0.0); // Direction towards the triangles
+            Ray ray(origin, direction);
+            double max_distance = 30.0;
+
+            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            CHECK(hit_triangle != nullptr);
+            CHECK(hit_triangle == &triangle11);
+            CHECK(hit_triangle->getPosition().isApprox(triangle11.getPosition()));
+        }
     }
 }
