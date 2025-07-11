@@ -4,6 +4,8 @@
 #include <Eigen/Dense>
 #include <concepts>
 #include <vector>
+#include <iostream>
+#include <string>
 
 #include "Structures/box.hpp"
 #include "Structures/plane.hpp"
@@ -81,6 +83,14 @@ class OctreeNode {
         /// @param closest_collision_distance Reference to a float that will hold the distance to the first hit object
         /// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
         const T* traceRay(const Ray& ray, double& closest_collision_distance);
+
+        void debugPrint(std::string val) const {
+            // Print the node's position and size for debugging purposes
+            for (unsigned int i = 0; i < depth; ++i) {
+                std::cout << "\t";
+            }
+            std::cout << val << std::endl;
+        };
 
     private:
         Box m_bounding_box; // Bounding box of the node
