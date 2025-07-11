@@ -174,17 +174,14 @@ const std::list<const T*> Octree<T>::getNeighbors(const Eigen::Vector3d& positio
     return neighbors;
 }
 
-/// @brief Uses Sorted Sibling Traversal to trace a ray through the octree and detect the first object hit by the ray.
-/// Inspired from https://bertolami.com/files/octrees.pdf
-/// @param origin Origin of the ray in world coordinates
-/// @param direction Direction of the ray in world coordinates
-/// @param max_distance Maximum distance to trace the ray
-/// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
 template <OctreeAcceptatble T>
-T* Octree<T>::traceRay(const Ray& ray, double max_distance) const {
-    return const_cast<T*>(m_root->traceRay(ray, max_distance)); // Start tracing the ray from the root node
+const T* Octree<T>::traceRay(const Ray& ray, double& hit_distance, double max_distance) const {
+    hit_distance = max_distance;
+    return m_root->traceRay(ray, hit_distance); // Start tracing the ray from the root node
 }
 
+/// Uses Sorted Sibling Traversal to trace a ray through the octree and detect the first object hit by the ray.
+///     Inspired from https://bertolami.com/files/octrees.pdf
 template <OctreeAcceptatble T>
 const T* OctreeNode<T>::traceRay(const Ray& ray, double& closest_collision_distance) {
     // Ray tracing logic for the octree

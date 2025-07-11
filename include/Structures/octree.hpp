@@ -113,7 +113,12 @@ class Octree {
 
         const std::list<const T*> getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const;
 
-        T* traceRay(const Ray& ray, double max_distance = std::numeric_limits<double>::infinity()) const;
+        /// @brief Uses Sorted Sibling Traversal to trace a ray through the octree and detect the first object hit by the ray.
+        /// @param ray The ray to trace through the octree
+        /// @param hit_distance Reference to a double that will hold the distance to the first hit object
+        /// @param max_distance Maximum distance to trace the ray (default is infinity)
+        /// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
+        const T* traceRay(const Ray& ray, double& hit_distance, double max_distance = std::numeric_limits<double>::infinity()) const;
 
         void clear();
 
