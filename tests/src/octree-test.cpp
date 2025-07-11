@@ -208,8 +208,6 @@ TEST_CASE("[Octree] testing ray tracing collision") {
         Ray ray(origin, direction);
         double max_distance = 10.0;
 
-        direction.normalize(); // Normalize the direction vector
-
         Triangle* hit_triangle = octree.traceRay(ray, max_distance);
         CHECK(hit_triangle != nullptr);
         CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
@@ -222,8 +220,6 @@ TEST_CASE("[Octree] testing ray tracing collision") {
         Ray ray(origin, direction);
         double max_distance = 10.0;
 
-        direction.normalize(); // Normalize the direction vector
-
         Triangle* hit_triangle = octree.traceRay(ray, max_distance);
         CHECK(hit_triangle != nullptr);
         CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
@@ -234,9 +230,28 @@ TEST_CASE("[Octree] testing ray tracing collision") {
         Ray ray(origin, direction);
         double max_distance = 0.5; // Too short to hit any triangle
 
-        direction.normalize(); // Normalize the direction vector
-
         Triangle* hit_triangle = octree.traceRay(ray, max_distance);
         CHECK(hit_triangle == nullptr);
+    }
+
+    Eigen::Vector3d pp1(1.0, 0.0, 0.0);
+    Eigen::Vector3d pp2(-1.0, 0.0, 0.0);
+    Eigen::Vector3d pp3(0.0, 0.0, 1.0);
+
+    Triangle triangle11(pp1, pp2, pp3);
+    triangle11.translate(Eigen::Vector3d(0.0, 30, -0.5)); // Move triangle1 outside the bounding box
+
+    octree.insert(&triangle11);
+
+    SUBCASE("Trace ray that hits a triangle multiple nodes away") {
+        Eigen::Vector3d origin(0.0, 3.0, 0.0); // Start outside the bounding box
+        Eigen::Vector3d direction(0.0, 1.0, 0.0); // Direction towards the triangles
+        Ray ray(origin, direction);
+        double max_distance = 30.0;
+
+        Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+        CHECK(hit_triangle != nullptr);
+        CHECK(hit_triangle == &triangle11);
+        CHECK(hit_triangle->getPosition().isApprox(triangle11.getPosition()));
     }
 }
