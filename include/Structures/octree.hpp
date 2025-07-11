@@ -113,7 +113,7 @@ class Octree {
 
         const std::list<const T*> getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const;
 
-        T* traceRay(const Ray& ray, double max_distance) const;
+        T* traceRay(const Ray& ray, double max_distance = std::numeric_limits<double>::infinity()) const;
 
         void clear();
 
