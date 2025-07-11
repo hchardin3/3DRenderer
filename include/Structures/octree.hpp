@@ -75,6 +75,11 @@ class OctreeNode {
             return m_half_size;
         };
 
+        /// @brief Trace a ray through the octree node and detect the first object hit by the ray.
+        /// @note This method uses Sorted Sibling Traversal to efficiently traverse the octree.
+        /// @param ray The ray to trace through the octree
+        /// @param closest_collision_distance Reference to a float that will hold the distance to the first hit object
+        /// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
         const T* traceRay(const Ray& ray, double& closest_collision_distance);
 
     private:
