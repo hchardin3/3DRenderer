@@ -5,23 +5,23 @@
 using namespace std::chrono;
 
 Render Scene::getRender() const {
-    auto t0 = high_resolution_clock::now();
+    // auto t0 = high_resolution_clock::now();
 
     const std::tuple<const int, const int> dimensions = m_camera->getDimensions();
     const int verticalResolution = std::get<0>(dimensions);
     const int horizontalResolution = std::get<1>(dimensions);
 
-    auto t1 = high_resolution_clock::now();
+    // auto t1 = high_resolution_clock::now();
 
     Render my_render(verticalResolution, horizontalResolution);
 
-    auto t2 = high_resolution_clock::now();
+    // auto t2 = high_resolution_clock::now();
 
     const std::vector<Ray>& rays = m_camera->getRays(); // Generate rays from the camera
 
-    auto t3 = high_resolution_clock::now();
+    // auto t3 = high_resolution_clock::now();
 
-    auto tracing_time = 0.0;
+    // auto tracing_time = 0.0;
 
     // Iterate through each pixel in the frame
     // Each pixel corresponds to a ray in the rays vector
@@ -30,10 +30,10 @@ Render Scene::getRender() const {
         const Ray& ray = rays[linear_id];
 
         double hit_distance;
-        auto t_start = high_resolution_clock::now();
+        // auto t_start = high_resolution_clock::now();
         const Triangle* hit_triangle = m_octree.traceRay(ray, hit_distance); // Check for intersection with the octree
-        auto t_end = high_resolution_clock::now();
-        tracing_time += duration_cast<nanoseconds>(t_end - t_start).count(); // Measure the time taken for ray tracing
+        // auto t_end = high_resolution_clock::now();
+        // tracing_time += duration_cast<nanoseconds>(t_end - t_start).count(); // Measure the time taken for ray tracing
 
         // If a triangle was hit, calculate the color intensity based on the light source
         if(hit_triangle) {
@@ -60,21 +60,21 @@ Render Scene::getRender() const {
         }
     }
 
-    auto t4 = high_resolution_clock::now();
+    // auto t4 = high_resolution_clock::now();
 
-    std::cout << "Time taken for resolution: "
-              << duration_cast<milliseconds>(t1 - t0).count() << " ms" << std::endl;
-    std::cout << "Time taken for render: "
-              << duration_cast<milliseconds>(t2 - t1).count() << " ms" << std::endl;
-    std::cout << "Time taken for ray generation: "
-                << duration_cast<milliseconds>(t3 - t2).count() << " ms" << std::endl;
-    std::cout << "Time taken for intersection: "
-                << duration_cast<milliseconds>(t4 - t3).count() << " ms" << std::endl;
-    std::cout << "Total time taken for ray tracing: "
-              << tracing_time * 1e-6 << " ms"
-              << " (" << tracing_time / duration_cast<nanoseconds>(t4 - t0).count() * 100 << " % of total time)" << std::endl;
-    std::cout << "Total time taken: "
-              << duration_cast<milliseconds>(t4 - t0).count() << " ms"  << std::endl;
+    // std::cout << "Time taken for resolution: "
+    //           << duration_cast<milliseconds>(t1 - t0).count() << " ms" << std::endl;
+    // std::cout << "Time taken for render: "
+    //           << duration_cast<milliseconds>(t2 - t1).count() << " ms" << std::endl;
+    // std::cout << "Time taken for ray generation: "
+    //             << duration_cast<milliseconds>(t3 - t2).count() << " ms" << std::endl;
+    // std::cout << "Time taken for intersection: "
+    //             << duration_cast<milliseconds>(t4 - t3).count() << " ms" << std::endl;
+    // std::cout << "Total time taken for ray tracing: "
+    //           << tracing_time * 1e-6 << " ms"
+    //           << " (" << tracing_time / duration_cast<nanoseconds>(t4 - t0).count() * 100 << " % of total time)" << std::endl;
+    // std::cout << "Total time taken: "
+    //           << duration_cast<milliseconds>(t4 - t0).count() << " ms"  << std::endl;
 
     return my_render;
 }
