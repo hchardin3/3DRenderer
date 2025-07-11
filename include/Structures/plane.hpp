@@ -26,6 +26,8 @@ struct Plane {
     /// @param ray The ray to check for intersection
     /// @param t The distance from the ray origin to the intersection point, only valid if the ray intersects the plane
     /// @return true if the ray intersects the plane, false otherwise
+    /// @note The method calculates the intersection point using the formula from 
+    ///     https://www.cs.princeton.edu/courses/archive/fall00/cs426/lectures/raycast/sld017.htm
     bool intersect(const Ray& ray, double& t) const {
         double denominator = normal.dot(ray.getDirection());
 
