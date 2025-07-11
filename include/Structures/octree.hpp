@@ -100,6 +100,10 @@ class OctreeNode {
         /// @note The method also prints the direction of each child node in its parent's bounding box.
         /// @note It is necessary to enable UTF-8 support in your console to see the tree structure correctly.
         void print(const std::string& prefix, bool isLast, const std::string& postfix) const {
+            // Inspired by Adrian Schneider's answer at:
+            //      https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+
+            // Print the prefix and the links to the hierarchy
             std::cout << prefix;
             std::cout << (isLast ? "└──" : "├──");
 
