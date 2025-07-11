@@ -160,7 +160,8 @@ TEST_CASE("[Octree] testing ray tracing collision") {
             Eigen::Vector3d direction(1.0, 1.0, 1.0);
             Ray ray(origin, direction);
 
-            Triangle* hit_triangle = octree.traceRay(ray);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle == nullptr);
         }
 
@@ -184,18 +185,20 @@ TEST_CASE("[Octree] testing ray tracing collision") {
             Eigen::Vector3d direction(1.0, 1.0, 1.0);
             Ray ray(origin, direction);
 
-            Triangle* hit_triangle = octree.traceRay(ray);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle != nullptr);
             CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
+            CHECK(hit_distance > 0.0); // Ensure hit distance is positive
         }
 
         SUBCASE("Trace ray that does not hit any triangles because it is outside the bounding box") {
             Eigen::Vector3d origin(10.0, 10.0, 10.0);
-            Eigen::Vector3d direction(-1.0, -1.0, -1.0);
+            Eigen::Vector3d direction(1.0, 1.0, 1.0);
             Ray ray(origin, direction);
-            double max_distance = 10.0;
 
-            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle == nullptr);
         }
         
@@ -204,9 +207,9 @@ TEST_CASE("[Octree] testing ray tracing collision") {
         SUBCASE("Trace ray that does not hit any triangles because of its direction") {
             Eigen::Vector3d direction(1.0, -1.0, 1.0);
             Ray ray(origin, direction);
-            double max_distance = 10.0;
 
-            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle == nullptr);
         }
 
@@ -214,7 +217,8 @@ TEST_CASE("[Octree] testing ray tracing collision") {
             Eigen::Vector3d direction(1.0, 1.0, 1.0);
             Ray ray(origin, direction);
 
-            Triangle* hit_triangle = octree.traceRay(ray);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle != nullptr);
             CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
         }
@@ -225,7 +229,8 @@ TEST_CASE("[Octree] testing ray tracing collision") {
             Eigen::Vector3d direction(1.0, 1.0, 1.0);
             Ray ray(origin, direction);
 
-            Triangle* hit_triangle = octree.traceRay(ray);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle != nullptr);
             CHECK(hit_triangle->getPosition().isApprox(triangle1.getPosition(), 1e-6));
         }
@@ -235,7 +240,8 @@ TEST_CASE("[Octree] testing ray tracing collision") {
             Ray ray(origin, direction);
             double max_distance = 0.5; // Too short to hit any triangle
 
-            Triangle* hit_triangle = octree.traceRay(ray, max_distance);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance, max_distance);
             CHECK(hit_triangle == nullptr);
         }
 
@@ -253,10 +259,12 @@ TEST_CASE("[Octree] testing ray tracing collision") {
             Eigen::Vector3d direction(0.0, 1.0, 0.0); // Direction towards the triangles
             Ray ray(origin, direction);
 
-            Triangle* hit_triangle = octree.traceRay(ray);
+            double hit_distance;
+            const Triangle* hit_triangle = octree.traceRay(ray, hit_distance);
             CHECK(hit_triangle != nullptr);
             CHECK(hit_triangle == &triangle11);
             CHECK(hit_triangle->getPosition().isApprox(triangle11.getPosition()));
+            CHECK(hit_distance == 27);
         }
     }
 }
