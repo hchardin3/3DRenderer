@@ -22,7 +22,7 @@ struct Plane {
             }
         }
 
-    /// @brief A method to check if a ray intersects with the plane
+    /// @brief A branchless method to check if a ray intersects with the plane
     /// @param ray The ray to check for intersection
     /// @param t The distance from the ray origin to the intersection point, only valid if the ray intersects the plane
     /// @return true if the ray intersects the plane, false otherwise
@@ -31,16 +31,14 @@ struct Plane {
     bool intersect(const Ray& ray, double& t) const {
         double denominator = normal.dot(ray.getDirection());
 
-        // If the denominator is zero, the ray is parallel to the plane
-        if (std::fabs(denominator) < std::numeric_limits<double>::epsilon()) {
-            return false;
-        }
+        double denom_valid = std::fabs(denominator) >= std::numeric_limits<double>::epsilon();
+        double safe_denominator = denominator + (1.0 - denom_valid); // Add 1 if denominator is zero
 
         // Calculate the distance from the ray origin to the intersection point
-        t = (m_point_dot_normal - ray.getOrigin().dot(normal)) / denominator;
+        t = (m_point_dot_normal - ray.getOrigin().dot(normal)) / safe_denominator;
 
         // Check if the intersection point is in front of the ray origin
-        return t >= 0;
+        return denom_valid && t >= 0;
     }
 
     /// @brief Get the dot product of the point on the plane and the normal vector
