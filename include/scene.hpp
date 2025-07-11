@@ -15,7 +15,6 @@ class Scene {
     private:
         Camera* m_camera;
         LightSource* m_lightSource;
-        std::list<Triangle*> m_listOfObjects;
         Octree<Triangle> m_octree; // Octree to manage the scene objects efficiently
     
     public:

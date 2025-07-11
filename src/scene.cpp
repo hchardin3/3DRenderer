@@ -21,30 +21,24 @@ Render Scene::getRender() const {
 
     auto t3 = high_resolution_clock::now();
 
+    auto tracing_time = 0.0;
+
     // Iterate through each pixel in the frame
     // Each pixel corresponds to a ray in the rays vector
     for (int linear_id(0); linear_id < verticalResolution * horizontalResolution; ++linear_id) 
     {
         const Ray& ray = rays[linear_id];
 
-        bool intersect(false);
-        float t, u, v;
-        float t_opt; // Initialize t_opt to a small value
-        const Triangle* hit_triangle = nullptr;
-        for (const Triangle* triangle : m_listOfObjects) {
-            if(triangle->intersect(ray, u, v, t)) {
-                if (!intersect || t < t_opt) {
-                    t_opt = t; // Update the closest intersection distance
-                    intersect = true;
-                    hit_triangle = triangle;
-                }
-            }
-        }
+        double hit_distance;
+        auto t_start = high_resolution_clock::now();
+        const Triangle* hit_triangle = m_octree.traceRay(ray, hit_distance); // Check for intersection with the octree
+        auto t_end = high_resolution_clock::now();
+        tracing_time += duration_cast<nanoseconds>(t_end - t_start).count(); // Measure the time taken for ray tracing
 
-
-        if(intersect) {
+        // If a triangle was hit, calculate the color intensity based on the light source
+        if(hit_triangle) {
             Eigen::Vector3d triangle_normal = hit_triangle->getNormal(); // Get the normal vector of the triangle
-            Eigen::Vector3d hit_position = ray.getOrigin() + ray.getDirection() * t_opt; // Calculate the intersection point
+            Eigen::Vector3d hit_position = ray.getOrigin() + ray.getDirection() * hit_distance; // Calculate the intersection point
             Eigen::Vector3d lightDirection = m_lightSource->getPosition() - hit_position;
             lightDirection.normalize(); // Normalize the light direction vector
 
@@ -61,7 +55,7 @@ Render Scene::getRender() const {
                 my_render.render(linear_id, 1) = intensity; // Set the pixel color in the render
                 my_render.render(linear_id, 2) = intensity; // Set the pixel color in the render
             } else {
-                my_render.render(linear_id, 0) = 10;
+                my_render.render(linear_id, 0) = 50;
             }
         }
     }
@@ -76,6 +70,9 @@ Render Scene::getRender() const {
                 << duration_cast<milliseconds>(t3 - t2).count() << " ms" << std::endl;
     std::cout << "Time taken for intersection: "
                 << duration_cast<milliseconds>(t4 - t3).count() << " ms" << std::endl;
+    std::cout << "Total time taken for ray tracing: "
+              << tracing_time * 1e-6 << " ms"
+              << " (" << tracing_time / duration_cast<nanoseconds>(t4 - t0).count() * 100 << " % of total time)" << std::endl;
     std::cout << "Total time taken: "
               << duration_cast<milliseconds>(t4 - t0).count() << " ms"  << std::endl;
 
@@ -83,6 +80,5 @@ Render Scene::getRender() const {
 }
 
 void Scene::addTriangle(Triangle* triangle) {
-    m_listOfObjects.push_front(triangle);
     m_octree.insert(triangle); // Insert the triangle into the octree
 }

@@ -6,7 +6,7 @@ project(3DRenderer)
 # This can be set in the command line with -DCMAKE_BUILD_TYPE=Debug or -DCMAKE_BUILD_TYPE=Release
 # or in the CMake GUI.
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 
