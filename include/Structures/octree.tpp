@@ -1,7 +1,5 @@
 #include "Structures/octree.hpp"
 
-#include <iostream>
-
 template <OctreeAcceptatble T>
 Octree<T>::Octree(unsigned int max_depth, double initial_size, unsigned int max_neighbors, const Eigen::Vector3d& root_postion) : 
         m_max_depth(max_depth),
@@ -184,16 +182,15 @@ const T* Octree<T>::traceRay(const Ray& ray, double& hit_distance, double max_di
 ///     Inspired from https://bertolami.com/files/octrees.pdf
 template <OctreeAcceptatble T>
 const T* OctreeNode<T>::traceRay(const Ray& ray, double& closest_collision_distance) {
-    // Ray tracing logic for the octree
-    // This function should return a pointer to the first object hit by the ray, or nullptr if no object is hit
-
+    // If the ray does not intersect the current bounding box, stop tracing
     double box_collision_distance;
-    if (!getBoundingBox().intersect(ray, box_collision_distance)) return nullptr; // If the ray does not intersect the current bounding box, stop tracing
+    if (!getBoundingBox().intersect(ray, box_collision_distance)) return nullptr;
 
     // If the intersection distance is greater than the closest collision distance, stop tracing
     if (box_collision_distance > closest_collision_distance) return nullptr;
 
-    const T* closest_collision = nullptr; // Initialize the closest collision to nullptr
+    // Initialize the closest collision to nullptr
+    const T* closest_collision = nullptr;
 
     // If the current node is a leaf node, check for collisions with the data in the node
     if (total_children_depth == 0) {
@@ -208,14 +205,12 @@ const T* OctreeNode<T>::traceRay(const Ray& ray, double& closest_collision_dista
                 }
             }
         }
+
         return closest_collision; // Return the closest object hit by the ray, or nullptr if no object was hit
     }
 
     // If the current node is not a leaf, traverse its children
     else {
-        // Get the index of the closest child node to the ray origin
-        unsigned char closest_node_index = getBranchIndex(ray.getOrigin(), position); 
-
         // Check the collision with the planes of the current node
         double plane_collision_distances[3];
         bool plane_collisions[3] = {
@@ -229,8 +224,8 @@ const T* OctreeNode<T>::traceRay(const Ray& ray, double& closest_collision_dista
         m_plane_indices.clear(); // Clear the vector to ensure it is empty before filling it
         double max_collision_distance = (ray.getOrigin() - position).norm() + m_half_size; // Maximum distance to consider for plane collisions
         for (int i = 0; i < 3; ++i) {
+            // If the plane was hit and the hit point is close enough, add its index to the vector
             if (plane_collisions[i] && plane_collision_distances[i] <= max_collision_distance) {
-                // If the plane was hit, add its index to the vector
                 m_plane_indices.push_back(i);
             }
         }
@@ -241,18 +236,19 @@ const T* OctreeNode<T>::traceRay(const Ray& ray, double& closest_collision_dista
             return plane_collision_distances[a] < plane_collision_distances[b];
         });
 
-        
+
+        // Get the index of the closest child node to the ray origin
+        unsigned char closest_node_index = getBranchIndex(ray.getOrigin(), position); 
+
         // Traverse the children of the current node (sorted by distance to the ray origin => maximum 4 children to traverse)
         unsigned char next_plane_index = 0; // Index of the next plane to check
-        const T* child_collision;
         for (int i = 0; i < 4; ++i) {
             // If the current child node is valid, check for collision
             if (children[closest_node_index] != nullptr) {
-                child_collision = children[closest_node_index]->traceRay(ray, closest_collision_distance); // Recursively trace the ray in the child node
+                closest_collision = children[closest_node_index]->traceRay(ray, closest_collision_distance); // Recursively trace the ray in the child node
                 
                 // If a collision was detected in the child node, we can stop tracing
-                if (child_collision != nullptr) {
-                    closest_collision = child_collision; // Update the closest object hit by the ray
+                if (closest_collision != nullptr) {
                     break;
                 }
             }
@@ -262,15 +258,14 @@ const T* OctreeNode<T>::traceRay(const Ray& ray, double& closest_collision_dista
                 break;
             }
 
-            closest_node_index ^= (1 << m_plane_indices[next_plane_index]); // Go to the next child node based on the plane index that was first hit by the ray
-            next_plane_index++; // Increment the index for the next iteration <=> invalidate the current plane
+            // Go to the next child node based on the plane index that was first hit by the ray
+            //      ie flip the bit corresponding to a change of node by passing through the current plane
+            closest_node_index ^= (1 << m_plane_indices[next_plane_index]); 
+            next_plane_index++; // Increment the index for the next iteration ie invalidate the current plane
         }
 
         return closest_collision; // Return the closest object hit by the ray, or nullptr if no object was hit
     }
-    
-
-    return nullptr; // No object hit by the ray
 }
 
 template <OctreeAcceptatble T>
