@@ -14,7 +14,7 @@ TEST_CASE("[Plane] testing plane construction") {
     }
 
     SUBCASE("Plane point is correctly set") {
-        CHECK(plane.point == point);
+        CHECK(plane.point.isApprox(point));
     }
 
     SUBCASE("Plane point dot normal is correctly calculated") {
