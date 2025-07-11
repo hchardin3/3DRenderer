@@ -45,7 +45,10 @@ int main() {
     // myCam.rotate(Eigen::Vector3d::UnitY(), 0.5); // Rotate the camera around the Y-axis
 
     // Create a scene with the camera
-    Scene myScene(&myCam);
+    unsigned int octree_max_depth = 5;
+    double octree_initial_size = 2.5; // Initial size of the octree's root node (length of one side of the cube)
+    unsigned int octree_max_neighbors = 3; // Maximum number of neighbors in each octree leaf
+    Scene myScene(&myCam, octree_max_depth, octree_initial_size, octree_max_neighbors);
     myScene.setLightSource(&light); // Set the light source in the scene
 
     // Add triangles to the scene

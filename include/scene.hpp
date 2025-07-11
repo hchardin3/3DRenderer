@@ -21,7 +21,13 @@ class Scene {
     public:
         /// @brief Create the whole scene that contains one camera and a few objects
         /// @param camera The camera to be used for rendering
-        Scene(Camera* camera) : m_camera(camera), m_octree(5, 2, 3, Eigen::Vector3d::Zero()) {};
+        /// @param octree_max_depth The maximum depth of the octree
+        /// @param octree_initial_size The initial size of the octree's root node (length of one side of the cube)
+        /// @param octree_max_neighbors The maximum number of neighbors in each octree leaf
+        Scene(Camera* camera, unsigned int octree_max_depth, double octree_initial_size, unsigned int octree_max_neighbors) : 
+            m_camera(camera), 
+            m_octree(octree_max_depth, octree_initial_size, octree_max_neighbors, camera->getPosition())
+        {};
 
         /// @brief Set the light source of the scene
         /// @param lightSource The light source to be used for rendering
