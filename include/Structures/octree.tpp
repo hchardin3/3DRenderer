@@ -280,4 +280,16 @@ void Octree<T>::clear() {
 template <OctreeAcceptatble T>
 void Octree<T>::print() const {
     // Print the octree structure
+    if (m_root) {
+        std::cout << "Octree Root Position: " << m_root->position.transpose() << ", Size: " << m_root->size 
+                  << ", Depth: " << m_root->depth << ", Total Children Depth: " << m_root->total_children_depth 
+                  << std::endl;
+        
+        // Ensure the console output is in UTF-8 format for proper character display
+        SetConsoleOutputCP(CP_UTF8);
+        // m_root->debugPrint("Root Node"); // Print the root node's position and size for debugging purposes
+        m_root->print("", true, "root"); // Call the print method of the root node to print its children and data
+    } else {
+        std::cout << "Octree is empty." << std::endl;
+    }
 }

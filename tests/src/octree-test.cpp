@@ -34,14 +34,12 @@ TEST_CASE("[Octree] testing octree insertion") {
             CHECK(root->data.size() == 3);
             CHECK(root->data.front() == &triangle);
             CHECK(root->data.back() == &triangle3);
-            
-            // std::cout << std::endl;
-            // std::cout << "After inserting multiple triangles:" << std::endl;
-            // octree.print();
 
             SUBCASE("Insert one more triangle within bounds, exceeding max neighbors") {
                 MockTriangle triangle4(Eigen::Vector3d(0.2, -0.8, -0.3));
                 octree.insert(&triangle4);
+
+                // octree.print(); // Print the octree structure for debugging
 
                 // Check that the root node is not a leaf anymore
                 CHECK(root->total_children_depth > 0);

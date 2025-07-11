@@ -7,6 +7,9 @@
 #include <iostream>
 #include <string>
 
+#include <Windows.h>
+#include <cstdio>
+
 #include "Structures/box.hpp"
 #include "Structures/plane.hpp"
 
@@ -90,6 +93,27 @@ class OctreeNode {
                 std::cout << "\t";
             }
             std::cout << val << std::endl;
+        };
+
+        void print(const std::string& prefix, bool isLast, const std::string& postfix) const {
+            std::cout << prefix;
+            std::cout << (isLast ? "└──" : "├──");
+
+            // Print the position and size of the node
+            std::cout << postfix << ": [" << position.transpose() << "] +- " << m_half_size << " \t >> ";
+
+            // print the value of the node
+            std::cout << data.size() << " triangles" << std::endl;
+
+            std::string direction[8] = {
+                "Right-Bottom-Back", "Right-Bottom-Front", "Right-Top-Back", "Right-Top-Front",
+                "Left-Bottom-Back", "Left-Bottom-Front", "Left-Top-Back", "Left-Top-Front"
+            };
+            if (total_children_depth > 0) {
+                for (unsigned int i = 0; i < 8; ++i) {
+                    children[i]->print(prefix + (isLast ? "    " : "│   "), i == 7, direction[i]);
+                }
+            }
         };
 
     private:
