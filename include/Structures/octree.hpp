@@ -37,7 +37,9 @@ class OctreeNode {
         /// @param position The position of the node in 3D space
         /// @param size The size of the node (length of one side of the bounding cube)
         /// @param depth The depth of the node in the octree hierarchy
-        /// @param is_leaf Indicates if the node is a leaf node (true) or a branch node (false)
+        /// @param total_children_depth The total depth of all children nodes
+        /// @note The position is the center of the node, and the size is the length of one side of the cube.
+        /// @note The node is initialized with a bounding box that is an Axis-Aligned cube centered at the position.
         OctreeNode(const Eigen::Vector3d& position, double size, unsigned int depth, unsigned int total_children_depth) : 
                 position(position), 
                 size(size), 
@@ -70,13 +72,16 @@ class OctreeNode {
             }
         };
 
+        /// @brief Get the bounding box of the octree node.
+        /// @return The bounding box of the node, which is an Axis-Aligned cube defined by its position and size.
         inline const Box& getBoundingBox() const {
             // Calculate the bounding box based on position and size
             return m_bounding_box;
         };
 
+        /// @brief Get the half size of the octree node.
+        /// @return The half size of the node, which is half the length of one side of the cube.
         inline double getHalfSize() const {
-            // Return half the size of the node
             return m_half_size;
         };
 
@@ -87,14 +92,13 @@ class OctreeNode {
         /// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
         const T* traceRay(const Ray& ray, double& closest_collision_distance);
 
-        void debugPrint(std::string val) const {
-            // Print the node's position and size for debugging purposes
-            for (unsigned int i = 0; i < depth; ++i) {
-                std::cout << "\t";
-            }
-            std::cout << val << std::endl;
-        };
-
+        /// @brief Recursively print the structure of the octree node to the console.
+        /// @param prefix The prefix string to print before the node's information
+        /// @param isLast Indicates if this node is the last child in its parent's list of children
+        /// @param postfix The postfix string to print after the node's information
+        /// @note This method prints the node's position, size, and the number of triangles it contains.
+        /// @note The method also prints the direction of each child node in its parent's bounding box.
+        /// @note It is necessary to enable UTF-8 support in your console to see the tree structure correctly.
         void print(const std::string& prefix, bool isLast, const std::string& postfix) const {
             std::cout << prefix;
             std::cout << (isLast ? "└──" : "├──");
@@ -146,11 +150,11 @@ class Octree {
             clear(); // Clear the octree to free memory
         };
 
+        /// @brief Inserts a single object into the octree.
+        /// @param data Pointer to the object to be inserted into the octree
+        /// @param verbose If true, prints debug information during insertion
+        /// @note The object must implement the `getPosition` method returning a 3D vector and the `intersect` method for ray intersection tests.
         void insert(const T* data, bool verbose = false);
-
-        void remove(const Node& node);
-
-        const std::list<const T*> getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const;
 
         /// @brief Uses Sorted Sibling Traversal to trace a ray through the octree and detect the first object hit by the ray.
         /// @param ray The ray to trace through the octree
@@ -159,10 +163,15 @@ class Octree {
         /// @return A pointer to the first object hit by the ray, or nullptr if no object is hit
         const T* traceRay(const Ray& ray, double& hit_distance, double max_distance = std::numeric_limits<double>::infinity()) const;
 
+        /// @brief Clears the octree, deleting all nodes and freeing memory.
         void clear();
 
+        /// @brief Prints the structure of the octree to the console.
+        /// @note This method prints the octree in a tree-like format, showing the hierarchy of nodes and their positions, sizes and data.
         void print() const;
 
+        /// @brief Returns the root node of the octree.
+        /// @return A pointer to the root node of the octree
         inline const Node* getRoot() const {
             return m_root; // Return the root node of the octree
         };
@@ -173,6 +182,10 @@ class Octree {
 
         Node* m_root; // Root node of the octree
 
+        /// @brief Helper method to add child nodes to a given node, skipping a specified index.
+        /// @param node Pointer to the node to which child nodes will be added to
+        /// @param ignore_index Index of the child node to skip (default is 8, which means no child is skipped)
+        /// @note The child nodes are created based on the position and size of the parent node
         inline void addChildrenToNode(Node* node, const unsigned char ignore_index = 8);
 };
 

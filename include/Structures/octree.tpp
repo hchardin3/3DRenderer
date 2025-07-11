@@ -161,18 +161,6 @@ void Octree<T>::insert(const T* data, bool verbose) {
 }
 
 template <OctreeAcceptatble T>
-void Octree<T>::remove(const Node& node) {
-    // Remove logic for the octree node
-}
-
-template <OctreeAcceptatble T>
-const std::list<const T*> Octree<T>::getNeighbors(const Eigen::Vector3d& position, const Box& bounding_box) const {
-    std::list<const T*> neighbors;
-    // Logic to find neighbors within the bounding box
-    return neighbors;
-}
-
-template <OctreeAcceptatble T>
 const T* Octree<T>::traceRay(const Ray& ray, double& hit_distance, double max_distance) const {
     hit_distance = max_distance;
     return m_root->traceRay(ray, hit_distance); // Start tracing the ray from the root node
