@@ -175,7 +175,96 @@ const std::list<const T*> Octree<T>::getNeighbors(const Eigen::Vector3d& positio
 template <OctreeAcceptatble T>
 const T* Octree<T>::traceRay(const Ray& ray, double& hit_distance, double max_distance) const {
     hit_distance = max_distance;
-    return m_root->traceRay(ray, hit_distance); // Start tracing the ray from the root node
+    Node* current_node = m_root; // Start tracing from the root node
+
+    // Initialize the closest collision to nullptr
+    const T* closest_collision = nullptr;
+
+    std::vector<unsigned char> plane_indices; // Vector to store the indices of the planes that were hit by the ray
+    plane_indices.reserve(3); // Reserve space for the plane indices (XY, XZ, YZ)
+
+    std::stack<Node*> nodes_to_visit; // Stack to keep track of the nodes to visit
+    nodes_to_visit.push(current_node); // Start with the root node
+
+    while (closest_collision == nullptr and !nodes_to_visit.empty()) {
+        current_node = nodes_to_visit.top(); // Get the current node to process
+        nodes_to_visit.pop(); // Remove the current node from the stack
+
+        // If the ray does not intersect the current bounding box, stop tracing
+        double box_collision_distance;
+        if (!current_node->getBoundingBox().intersect(ray, box_collision_distance)) continue;
+
+        // If the intersection distance is greater than the closest collision distance, stop tracing
+        if (box_collision_distance > hit_distance) continue;
+
+        // If the current node is a leaf node, check for collisions with the data in the node
+        if (current_node->total_children_depth == 0) {
+            float u, v, collision_distance;
+            for (const T* t_data : current_node->data) {
+                // Check if the ray intersects with the data object
+                if (t_data->intersect(ray, u, v, collision_distance)) {
+                    // If the collision distance is less than the closest collision distance, update it
+                    if (collision_distance < hit_distance) {
+                        hit_distance = collision_distance;
+                        closest_collision = t_data; // Update the closest object hit by the ray
+                    }
+                }
+            }
+        }
+
+        // If the current node is not a leaf, traverse its children
+        else {
+            // Check the collision with the planes of the current node
+            double plane_collision_distances[3];
+            bool plane_collisions[3] = {
+                current_node->getPlaneXY().intersect(ray, plane_collision_distances[0]), // Check intersection with the XY plane
+                current_node->getPlaneXZ().intersect(ray, plane_collision_distances[1]), // Check intersection with the XZ plane
+                current_node->getPlaneYZ().intersect(ray, plane_collision_distances[2])  // Check intersection with the YZ plane
+            };
+            
+            // Fill in the indices vector with the indices of the planes that were hit 
+            //      AND are close enough to the ray origin to avoid checking collisions that are too far away
+            plane_indices.clear(); // Clear the vector to ensure it is empty before filling it
+            double max_collision_distance = (ray.getOrigin() - current_node->position).norm() + current_node->getHalfSize(); // Maximum distance to consider for plane collisions
+            for (int i = 0; i < 3; ++i) {
+                // If the plane was hit and the hit point is close enough, add its index to the vector
+                if (plane_collisions[i] && plane_collision_distances[i] <= max_collision_distance) {
+                    plane_indices.push_back(i);
+                }
+            }
+
+            // Sort the indices of the planes that were hit based on the distance to the ray origin
+            std::sort(plane_indices.begin(), plane_indices.end(), [&](unsigned char a, unsigned char b) {
+                // Sort the indices based on the distance to the ray origin
+                return plane_collision_distances[a] < plane_collision_distances[b];
+            });
+
+
+            // Get the index of the closest child node to the ray origin
+            unsigned char closest_node_index = getBranchIndex(ray.getOrigin(), current_node->position); 
+
+            // Traverse the children of the current node (sorted by distance to the ray origin => maximum 4 children to traverse)
+            unsigned char next_plane_index = 0; // Index of the next plane to check
+            for (int i = 0; i < 4; ++i) {
+                // If the current child node is valid, check for collision
+                if (current_node->children[closest_node_index] != nullptr) {
+                    nodes_to_visit.push(current_node->children[closest_node_index]); // Add the child node to the stack for further processing
+                }
+
+                // If we have checked all the planes, we can stop tracing
+                if (next_plane_index >= plane_indices.size()) {
+                    break;
+                }
+
+                // Go to the next child node based on the plane index that was first hit by the ray
+                //      ie flip the bit corresponding to a change of node by passing through the current plane
+                closest_node_index ^= (1 << plane_indices[next_plane_index]); 
+                next_plane_index++; // Increment the index for the next iteration ie invalidate the current plane
+            }
+        }
+    }
+
+    return closest_collision; // Return the closest object hit by the ray, or nullptr if no object was hit
 }
 
 /// Uses Sorted Sibling Traversal to trace a ray through the octree and detect the first object hit by the ray.

@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <stack>
 
 #include "Structures/box.hpp"
 #include "Structures/plane.hpp"
@@ -75,6 +76,21 @@ class OctreeNode {
         inline double getHalfSize() const {
             // Return half the size of the node
             return m_half_size;
+        };
+
+        inline const Plane& getPlaneXY() const {
+            // Return the XY plane of the node
+            return m_plane_xy;
+        };
+
+        inline const Plane& getPlaneXZ() const {
+            // Return the XZ plane of the node
+            return m_plane_xz;
+        };
+
+        inline const Plane& getPlaneYZ() const {
+            // Return the YZ plane of the node
+            return m_plane_yz;
         };
 
         /// @brief Trace a ray through the octree node and detect the first object hit by the ray.
