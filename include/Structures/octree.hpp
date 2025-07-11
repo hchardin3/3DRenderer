@@ -3,8 +3,10 @@
 #include <list>
 #include <Eigen/Dense>
 #include <concepts>
+#include <vector>
 
 #include "Structures/box.hpp"
+#include "Structures/plane.hpp"
 
 // Concept OctreeAcceptatble: type 'T' has 
 //  `.getPosition` and its return is convertible to Vector3d.
@@ -36,7 +38,11 @@ class OctreeNode {
                 size(size), 
                 depth(depth),
                 total_children_depth(total_children_depth),
-                m_half_size(size / 2) {
+                m_half_size(size / 2),
+                m_plane_xy(Eigen::Vector3d::UnitZ(), position), // Plane parallel to XY plane
+                m_plane_xz(Eigen::Vector3d::UnitY(), position), // Plane parallel to XZ plane
+                m_plane_yz(Eigen::Vector3d::UnitX(), position) // Plane parallel to YZ plane
+        {
             assert(size > 0 && "Size of the octree node must be greater than zero.");
 
             // Initialize the bounding box based on position and size
@@ -47,6 +53,8 @@ class OctreeNode {
             for (int i = 0; i < 8; ++i) {
                 children[i] = nullptr;
             }
+
+            m_plane_indices.reserve(3); // Reserve space for plane indices
         };
 
         /// @brief Destructor for OctreeNode
@@ -67,9 +75,18 @@ class OctreeNode {
             return m_half_size;
         };
 
+        const T* traceRay(const Ray& ray, double& closest_collision_distance);
+
     private:
         Box m_bounding_box; // Bounding box of the node
         double m_half_size; // Half the size of the node, used for bounding box calculations
+
+        // Planes for intersection tests
+        // These planes are centered on the node's position and aligned with the axes
+        Plane m_plane_xy, m_plane_xz, m_plane_yz; 
+
+        // Indices of the planes hit by a ray
+        std::vector<unsigned char> m_plane_indices;
 };
 
 template <OctreeAcceptatble T>
