@@ -14,10 +14,10 @@ class Camera : public SceneObject {
         double m_verticalFOV;
 
         /// @brief The horizontal resolution (in number of pixels)
-        const int m_horizontalResolution;
+        const unsigned int m_horizontalResolution;
 
         /// @brief The vertical resolution (in number of pixels)
-        const int m_verticalResolution;
+        const unsigned int m_verticalResolution;
 
         /// @brief The horizontal field of view in radians per pixel
         double m_horizontalRadPerPixel;
@@ -53,8 +53,8 @@ class Camera : public SceneObject {
         /// @param horizontalResolution The horizontal resolution (in number of pixels)
         /// @param verticalResolution The vertical field of vue (in number of pixels)
         /// @param distance The distance between the eye and the projection plane (in meters)
-        Camera(Eigen::Vector3d position, double horizontalFOV, double verticalFOV, 
-                const int horizontalResolution, const int verticalResolution, double distance);
+        Camera(Eigen::Vector3d position, double horizontalFOV, double verticalFOV,
+                const unsigned int horizontalResolution, const unsigned int verticalResolution, double projectionDistance);
 
 
         /// @brief  A method to set the position of the camera in the global frame

@@ -7,9 +7,9 @@ using namespace std::chrono;
 Render Scene::getRender() const {
     // auto t0 = high_resolution_clock::now();
 
-    const std::tuple<const int, const int> dimensions = m_camera->getDimensions();
-    const int verticalResolution = std::get<0>(dimensions);
-    const int horizontalResolution = std::get<1>(dimensions);
+    const std::tuple<const unsigned int, const unsigned int> dimensions = m_camera->getDimensions();
+    const unsigned int verticalResolution = std::get<0>(dimensions);
+    const unsigned int horizontalResolution = std::get<1>(dimensions);
 
     // auto t1 = high_resolution_clock::now();
 

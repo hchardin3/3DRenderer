@@ -1,13 +1,13 @@
 #include "camera.hpp"
 
 Camera::Camera(Eigen::Vector3d position, double horizontalFOV, double verticalFOV, 
-                const int horizontalResolution, const int verticalResolution, double distance) :
+                const unsigned int horizontalResolution, const unsigned int verticalResolution, double projectionDistance) :
     SceneObject(position, Eigen::Vector3d::UnitY(), Eigen::Vector3d::UnitZ()),
     m_horizontalFOV(horizontalFOV), 
     m_verticalFOV(verticalFOV),
     m_horizontalResolution(horizontalResolution),
     m_verticalResolution(verticalResolution),
-    m_distance(distance),
+    m_distance(projectionDistance),
     m_pixel_positions(Eigen::ArrayX3d::Zero(verticalResolution * horizontalResolution, 3)),
     m_rays(verticalResolution * horizontalResolution)
 {

@@ -13,8 +13,8 @@ using namespace std::chrono;
 
 
 int main() {
-    constexpr int WIDTH = 800;
-    constexpr int HEIGHT = 800;
+    constexpr unsigned int WIDTH = 800;
+    constexpr unsigned int HEIGHT = 800;
 
     Eigen::Vector3d A, B, C, D;
     A << -1., 1., 0.;
@@ -41,7 +41,10 @@ int main() {
     // Create a camera
     // The camera is initialized at the origin, facing the Y-axis
     Eigen::Vector3d cameraPosition(0, 0, 0);
-    Camera myCam(cameraPosition, 1.7, 1.7, WIDTH, HEIGHT, 1.0);
+    const double horizontalFOV = 1.7; // Horizontal field of view in radians
+    const double verticalFOV = 1.7; // Vertical field of view in radians
+    const double projectionDistance = 1.0; // Distance from the camera to the projection plane
+    Camera myCam(cameraPosition, horizontalFOV, verticalFOV, WIDTH, HEIGHT, projectionDistance);
     // myCam.rotate(Eigen::Vector3d::UnitY(), 0.5); // Rotate the camera around the Y-axis
 
     // Create a scene with the camera
